@@ -14,14 +14,16 @@ function Layout(props) {
         <title>My page title</title>
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css"
+        />
       </Head>
       <Navbar />
       {props.children}
       <style global jsx>{`
         :root,
         body {
-          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-            Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
           padding: 0;
           margin: 0;
         }

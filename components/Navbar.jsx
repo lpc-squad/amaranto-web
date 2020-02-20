@@ -1,27 +1,23 @@
+import { Navbar } from "react-bulma-components";
 import Link from "next/link";
 
-function Navbar() {
+function CustomNavbar() {
   return (
-    <nav>
-      <ul>
-        <li>
+    <Navbar>
+      <Navbar.Container>
+        <Navbar.Item>
           <Link href="/">
-            <a>Link</a>
+            <a>Inicio</a>
           </Link>
-        </li>
-        <li>
-          <Link href="/">
-            <a>Link</a>
+        </Navbar.Item>
+        <Navbar.Item>
+          <Link href="/patient/new">
+            <a>Pacientes</a>
           </Link>
-        </li>
-        <li>
-          <Link href="/">
-            <a>Link</a>
-          </Link>
-        </li>
-      </ul>
-    </nav>
+        </Navbar.Item>
+      </Navbar.Container>
+    </Navbar>
   );
 }
 
-export default Navbar;
+export default CustomNavbar;
