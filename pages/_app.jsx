@@ -1,4 +1,5 @@
 // import App from 'next/app'
+import "react-bulma-components/dist/react-bulma-components.min.css";
 import Layout from "../components/Layout";
 
 function MyApp({ Component, pageProps }) {
