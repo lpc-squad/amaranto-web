@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Button, Grid, Paper, Typography } from "@material-ui/core";
+import { Badge, Button, Grid, Paper, Typography } from "@material-ui/core";
+import { Alert, AlertTitle } from "@material-ui/lab";
 import {
   Table,
   TableBody,
@@ -12,23 +12,36 @@ import {
 
 import db from "../src/api";
 
-function Index() {
-  const [patients, setPatients] = useState([]);
-
-  useEffect(() => {
-    setPatients(db.get("patients").value());
-  }, []);
-
+function Index({ patients = [] }) {
   return (
-    <Grid container direction="column" spacing={4}>
+    <Grid container direction="column" spacing={6}>
+      <Alert severity="info">
+        <AlertTitle>
+          ¿Qué pensás de la aplicación? Dejanos tus comentarios por{" "}
+          <a href="mailto:facundomgordillo@gmail.com?Subject=Clinical%20Record">
+            Email
+          </a>{" "}
+          o <a href="">Twitter</a>
+        </AlertTitle>
+        Estamos en etapa de desarrollo de Clínica Digital. ¡Contamos con ustedes
+        para formar la mejor solución!
+      </Alert>
       <Grid item>
-        <Typography variant="h2">Clinica Digital</Typography>
-        <Typography variant="subtitle1">v0.1 - Alpha - Presentación</Typography>
+        <Badge
+          badgeContent={"BETA"}
+          color="secondary"
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right"
+          }}
+        >
+          <Typography variant="h2">Clinica Digital</Typography>
+        </Badge>
       </Grid>
       <Grid item>
         <Grid container spacing={4} style={{ justifyContent: "center" }}>
           <Grid item>
-            <Link href="/registers" prefetch>
+            <Link href="/registers">
               <Button
                 component="a"
                 size="large"
@@ -95,5 +108,15 @@ const PatientRow = ({ patient }) => (
     </TableCell>
   </TableRow>
 );
+
+Index.getInitialProps = ctx => {
+  const patients = db
+    .get("patients")
+    .cloneDeep()
+    .value();
+  return {
+    patients
+  };
+};
 
 export default Index;

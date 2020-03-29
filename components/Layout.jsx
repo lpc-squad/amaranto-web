@@ -5,7 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 const listWidth = 180;
 const useStyles = makeStyles(theme => ({
   container: {
-    marginTop: 24
+    paddingTop: 32
   },
   drawerPaper: {
     justifyContent: "space-between"
