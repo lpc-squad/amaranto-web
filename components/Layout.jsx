@@ -1,38 +1,52 @@
-import Head from "next/head";
-import styled from "styled-components";
-import Navbar from "./Navbar";
+import Link from "next/link";
+import { Avatar, Container, Drawer, List, ListItem } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 
-const MainDiv = styled.div`
-  margin: 0;
-  padding: 0;
-`;
+const listWidth = 180;
+const useStyles = makeStyles(theme => ({
+  container: {
+    paddingTop: 32
+  },
+  drawerPaper: {
+    justifyContent: "space-between"
+  },
+  list: {
+    width: listWidth
+  },
+  avatar: {
+    width: listWidth / 2,
+    height: listWidth / 2,
+    alignSelf: "center"
+  }
+}));
 
 function Layout(props) {
+  const classes = useStyles();
   return (
-    <MainDiv>
-      <Head>
-        <title>My page title</title>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-        <link
-          rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css"
-        />
-      </Head>
-      <Navbar />
+    <Container className={classes.container}>
       {props.children}
-      <style global jsx>{`
-        :root,
-        body {
-          padding: 0;
-          margin: 0;
-        }
-        :root {
-          height: 100vh;
-          background-color: #314980;
-        }
-      `}</style>
-    </MainDiv>
+      <Drawer
+        anchor="left"
+        variant="permanent"
+        classes={{
+          paper: classes.drawerPaper
+        }}
+      >
+        <List className={classes.list}>
+          <Link href="/">
+            <ListItem button component="a">
+              Inicio
+            </ListItem>
+          </Link>
+          <Link href="/">
+            <ListItem button component="a">
+              Pacientes
+            </ListItem>
+          </Link>
+        </List>
+        <Avatar className={classes.avatar}>JC</Avatar>
+      </Drawer>
+    </Container>
   );
 }
 
