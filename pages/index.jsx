@@ -1,46 +1,103 @@
 import { useEffect, useState } from "react";
-import { getUser } from "../src/index";
+import Link from "next/link";
+import {
+  Avatar,
+  Button,
+  Container,
+  Drawer,
+  List,
+  ListItem,
+  Paper,
+  Typography
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow
+} from "@material-ui/core";
+
+import db from "../src/api";
+
+const useStyles = makeStyles(theme => ({
+  list: {
+    maxWidth: 360
+  }
+}));
 
 function Index() {
-  const [user, setUser] = useState({});
+  const classes = useStyles();
+  const [patients, setPatients] = useState([]);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   useEffect(() => {
-    getUser().then(response => setUser(user));
-  });
+    setPatients(db.get("patients").value());
+  }, []);
+
+  function toggleDrawer() {
+    setDrawerOpen(d => !d);
+  }
 
   return (
-    <div>
-      <h1>Clinical Record</h1>
-      <main>
-        <section>
-          <h1>MUY BUENA PAGINA</h1>
-        </section>
-        <section>
-          <h1>LA RECOMIENDO</h1>
-        </section>
-        <section>
-          <h2>Contacto :v</h2>
-          <address>
-            <p>0800-chupala-:v</p>
-          </address>
-        </section>
-      </main>
-      <style jsx>
-        {`
-          section * {
-            padding: 1rem;
-            margin: 0;
-          }
-          section:nth-child(odd) {
-            background-color: #bfd2ff;
-          }
-          section:nth-child(even) {
-            background-color: #739dff;
-          }
-        `}
-      </style>
-    </div>
+    <Container>
+      <Typography>Hola mundo</Typography>
+      <Button onClick={toggleDrawer}>Click me</Button>
+
+      <TableContainer component={Paper}>
+        <Table aria-label="patients table">
+          <TableHead>
+            <TableRow>
+              <TableCell>Nombre</TableCell>
+              <TableCell>Apellido</TableCell>
+              <TableCell>Acciones</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {patients.length > 0 &&
+              patients.map((i, k) => <PatientRow key={k} patient={i} />)}
+          </TableBody>
+        </Table>
+      </TableContainer>
+
+      <Drawer
+        variant="permanent"
+        anchor="left"
+        open={drawerOpen}
+        onClose={toggleDrawer}
+      >
+        <List className={classes.list}>
+          <Link href="/">
+            <ListItem button component="a">
+              Inicio
+            </ListItem>
+          </Link>
+          <Link href="/">
+            <ListItem button component="a">
+              Pacientes
+            </ListItem>
+          </Link>
+        </List>
+        <Avatar>JC</Avatar>
+      </Drawer>
+    </Container>
   );
 }
+
+const PatientRow = ({ patient }) => (
+  <TableRow>
+    <TableCell>{patient.name}</TableCell>
+    <TableCell>{patient.surname}</TableCell>
+    <TableCell>
+      <Link href="/patients/[id]" as={`/patients/${patient._id}`}>
+        <Button variant="outlined" color="primary" component="a">
+          Ver
+        </Button>
+      </Link>
+    </TableCell>
+  </TableRow>
+);
 
 export default Index;
