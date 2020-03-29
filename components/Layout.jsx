@@ -4,6 +4,9 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const listWidth = 180;
 const useStyles = makeStyles(theme => ({
+  container: {
+    marginTop: 24
+  },
   drawerPaper: {
     justifyContent: "space-between"
   },
@@ -20,7 +23,7 @@ const useStyles = makeStyles(theme => ({
 function Layout(props) {
   const classes = useStyles();
   return (
-    <Container>
+    <Container className={classes.container}>
       {props.children}
       <Drawer
         anchor="left"
