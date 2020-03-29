@@ -1,16 +1,6 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import {
-  Avatar,
-  Button,
-  Container,
-  Drawer,
-  List,
-  ListItem,
-  Paper,
-  Typography
-} from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { Button, Paper, Typography } from "@material-ui/core";
 import {
   Table,
   TableBody,
@@ -22,29 +12,17 @@ import {
 
 import db from "../src/api";
 
-const useStyles = makeStyles(theme => ({
-  list: {
-    maxWidth: 360
-  }
-}));
-
 function Index() {
-  const classes = useStyles();
   const [patients, setPatients] = useState([]);
-  const [drawerOpen, setDrawerOpen] = useState(false);
 
   useEffect(() => {
     setPatients(db.get("patients").value());
   }, []);
 
-  function toggleDrawer() {
-    setDrawerOpen(d => !d);
-  }
-
   return (
-    <Container>
-      <Typography>Hola mundo</Typography>
-      <Button onClick={toggleDrawer}>Click me</Button>
+    <>
+      <Typography variant="h2">Clinica Digital</Typography>
+      <Typography variant="subtitle1">v0.1 - Alpha - Presentación</Typography>
 
       <TableContainer component={Paper}>
         <Table aria-label="patients table">
@@ -61,28 +39,7 @@ function Index() {
           </TableBody>
         </Table>
       </TableContainer>
-
-      <Drawer
-        variant="permanent"
-        anchor="left"
-        open={drawerOpen}
-        onClose={toggleDrawer}
-      >
-        <List className={classes.list}>
-          <Link href="/">
-            <ListItem button component="a">
-              Inicio
-            </ListItem>
-          </Link>
-          <Link href="/">
-            <ListItem button component="a">
-              Pacientes
-            </ListItem>
-          </Link>
-        </List>
-        <Avatar>JC</Avatar>
-      </Drawer>
-    </Container>
+    </>
   );
 }
 
