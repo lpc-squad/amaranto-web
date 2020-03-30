@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import Link from "next/link";
 import {
   Button,
   Card,
@@ -62,13 +63,14 @@ function NewRegister(props) {
       setSearchResult([]);
       return;
     }
+    let txt = text.toLowerCase();
     const result = db
       .get("patients")
       .filter(
         o =>
-          o.name.includes(text) ||
-          o.surname.includes(text) ||
-          o.documentId.toString().includes(text)
+          o.name.toLowerCase().includes(txt) ||
+          o.surname.toLowerCase().includes(txt) ||
+          o.documentId.toString().includes(txt)
       )
       .value();
 
@@ -83,7 +85,7 @@ function NewRegister(props) {
         </Grid>
         <Grid item>
           <Grid container spacing={4} alignItems="center">
-            <Grid item xs={6}>
+            <Grid item sm={6} xs={12}>
               <form>
                 <Grid container direction="column" spacing={4}>
                   <Grid item>
@@ -110,12 +112,8 @@ function NewRegister(props) {
                 </Grid>
               </form>
             </Grid>
-            <Grid item xs={6}>
-              <Patient
-                data={patient}
-                toggleModal={toggleModal}
-                handleClick={() => console.log("ALO")}
-              />
+            <Grid item sm={6} xs={12}>
+              <Patient data={patient} toggleModal={toggleModal} />
             </Grid>
           </Grid>
         </Grid>
@@ -150,7 +148,11 @@ function Patient({ data, toggleModal }) {
             <Grid item>
               <Typography>Nombre: {data.name}</Typography>
               <Typography>Documento: {data.documentId}</Typography>
-              <Button variant="outlined">Ver ficha completa</Button>
+              <Link href="/patients/[id]" as={`/patients/${data._id}`}>
+                <Button variant="outlined" component="a">
+                  Ver ficha completa
+                </Button>
+              </Link>
             </Grid>
           </Grid>
         </CardContent>
