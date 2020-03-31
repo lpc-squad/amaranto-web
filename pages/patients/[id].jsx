@@ -1,12 +1,6 @@
-import { differenceInYears, format, parseISO } from "date-fns";
-import {
-  Avatar,
-  Card,
-  CardContent,
-  Grid,
-  Paper,
-  Typography
-} from "@material-ui/core";
+import { useCallback, useEffect, useState } from "react";
+import { differenceInYears, format } from "date-fns";
+import { Card, CardContent, Grid, Paper, Typography } from "@material-ui/core";
 import {
   Table,
   TableBody,
@@ -20,11 +14,28 @@ import AvatarPlaceholder from "../../components/AvatarPlaceholder";
 
 import db from "../../src/api";
 
-function Patient({ patient = {}, records = [] }) {
+function Patient({ patient }) {
+  const [records, setRecords] = useState([]);
+
+  useEffect(() => {
+    let _records = db
+      .get("records")
+      .filter(p => p._patientId === patient._id)
+      .value();
+
+    if (!Array.isArray(_records) && !!_records) {
+      _records = [_records];
+    }
+
+    if (_records) {
+      setRecords(_records);
+    }
+  }, [patient]);
+
   if (patient) {
     return (
-      <Grid container direction="column" spacing={4}>
-        <Grid item>
+      <Grid container direction="column" spacing={6}>
+        <Grid item xs={12} style={{ alignSelf: "center" }}>
           <Card>
             <CardContent>
               <Grid container justify="space-evenly">
@@ -45,7 +56,7 @@ function Patient({ patient = {}, records = [] }) {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item>
+        <Grid item xs={12} style={{ alignSelf: "center" }}>
           <TableContainer component={Paper}>
             <Table aria-label="patients table">
               <TableHead>
@@ -99,15 +110,6 @@ Patient.getInitialProps = ctx => {
     .find({ _id: id })
     .value();
 
-  let records = db
-    .get("records")
-    .find({ _patientId: id })
-    .value();
-
-  if (!Array.isArray(records) && !!records) {
-    records = [records];
-  }
-
   // Server Side calculation, Is this OK?
   patient.age = differenceInYears(
     new Date(),
@@ -115,8 +117,7 @@ Patient.getInitialProps = ctx => {
   );
 
   return {
-    patient,
-    records
+    patient
   };
 };
 

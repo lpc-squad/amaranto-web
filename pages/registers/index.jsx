@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import shortId from "shortid";
 import Link from "next/link";
 import {
   Button,
@@ -35,6 +36,8 @@ function NewRegister(props) {
 
   const [modal, setModal] = useState(false);
   const [patient, setPatient] = useState(null);
+  const [indications, setIndications] = useState("");
+  const [observations, setObservations] = useState("");
   const [searchResult, setSearchResult] = useState([]);
 
   /**
@@ -77,47 +80,87 @@ function NewRegister(props) {
     setSearchResult(result);
   }
 
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    const collection = db.get("records");
+    console.log("ESTADO ACTUAL", db.getState());
+
+    if (!patient || !indications || !observations) {
+      console.info("NO FUE CREADO");
+      return;
+    }
+
+    const result = collection
+      .push({
+        _id: shortId.generate(),
+        _doctorId: 1, // FIXME hardCoded
+        _patientId: patient._id,
+        indications,
+        observations,
+        date: new Date()
+      })
+      .write();
+
+    console.log("FUE CREADO!", result);
+  }
+
   return (
     <Paper style={{ padding: 48 }}>
-      <Grid container direction="column" spacing={4}>
-        <Grid item>
-          <Typography variant="h2">Crear registro</Typography>
-        </Grid>
-        <Grid item>
-          <Grid container spacing={4} alignItems="center">
-            <Grid item sm={6} xs={12}>
-              <form>
-                <Grid container direction="column" spacing={4}>
-                  <Grid item>
-                    <TextField
-                      fullWidth
-                      multiline
-                      rows={3}
-                      id="observations"
-                      variant="outlined"
-                      label="🩺Motivo de consulta, observaciones"
-                    />
+      <form onSubmit={handleSubmit}>
+        <Grid container direction="column" spacing={4}>
+          <Grid item>
+            <Grid container direction="column" spacing={4}>
+              <Grid item>
+                <Typography variant="h2">Crear registro</Typography>
+              </Grid>
+              <Grid item>
+                <Grid container spacing={4} alignItems="center">
+                  <Grid item sm={6} xs={12}>
+                    <Grid container direction="column" spacing={4}>
+                      <Grid item>
+                        <TextField
+                          fullWidth
+                          multiline
+                          rows={3}
+                          id="observations"
+                          variant="outlined"
+                          label="🩺Motivo de consulta, observaciones"
+                          onChange={e => setObservations(e.target.value)}
+                        />
+                      </Grid>
+                      <Grid item>
+                        <TextField
+                          fullWidth
+                          multiline
+                          rows={3}
+                          id="indications"
+                          variant="outlined"
+                          label="💊Indicaciones para el paciente"
+                          placeholder="Medicamentos, tratamientos..."
+                          onChange={e => setIndications(e.target.value)}
+                        />
+                      </Grid>
+                    </Grid>
                   </Grid>
-                  <Grid item>
-                    <TextField
-                      fullWidth
-                      multiline
-                      rows={3}
-                      id="indications"
-                      variant="outlined"
-                      label="💊Indicaciones para el paciente"
-                      placeholder="Medicamentos, tratamientos..."
-                    />
+                  <Grid item sm={6} xs={12}>
+                    <Patient data={patient} toggleModal={toggleModal} />
                   </Grid>
                 </Grid>
-              </form>
+              </Grid>
             </Grid>
-            <Grid item sm={6} xs={12}>
-              <Patient data={patient} toggleModal={toggleModal} />
+          </Grid>
+          <Grid item>
+            <Grid container style={{ justifyContent: "center" }}>
+              <Grid item>
+                <Button variant="contained" color="primary" type="submit">
+                  Crear registro
+                </Button>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
-      </Grid>
+      </form>
       <SearchPatient
         open={modal}
         onClose={toggleModal}
