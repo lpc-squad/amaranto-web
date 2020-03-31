@@ -1,4 +1,4 @@
-import { arrayOf, string, object } from "prop-types";
+import { arrayOf, oneOfType, string, object } from "prop-types";
 import {
   Paper,
   Table,
@@ -21,7 +21,7 @@ function TableComponent(props) {
 TableComponent.propTypes = {
   ariaTable: string,
   head: object.isRequired,
-  content: arrayOf(object).isRequired
+  content: oneOfType([(arrayOf(object), object)]).isRequired
 };
 
 export default TableComponent;

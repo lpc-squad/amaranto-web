@@ -96,7 +96,7 @@ const RecordRow = ({ record }) => {
 };
 
 Patient.getInitialProps = async ctx => {
-  const differenceInYears = await import("date-fns/differenceInYears");
+  const { differenceInYears } = await import("date-fns");
   const { id } = ctx.query;
 
   let patient = db
