@@ -6,6 +6,7 @@ import {
   Avatar,
   Container,
   Drawer,
+  Divider,
   IconButton,
   List,
   ListItem,
@@ -20,35 +21,36 @@ import HomeIcon from "@material-ui/icons/Home";
 import MenuIcon from "@material-ui/icons/Menu";
 import PatientsIcon from "@material-ui/icons/Group";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 
 const drawerWidth = 240;
 
 const useStyles = makeStyles(theme => ({
   avatarOpen: {
-    width: drawerWidth / 2,
-    height: drawerWidth / 2,
-    alignSelf: "center",
-    transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen
-    }),
-    transition: theme.transitions.create("height", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen
-    })
+    // width: drawerWidth / 2,
+    // height: drawerWidth / 2,
+    // alignSelf: "center",
+    // transition: theme.transitions.create("width", {
+    //   easing: theme.transitions.easing.sharp,
+    //   duration: theme.transitions.duration.enteringScreen
+    // }),
+    // transition: theme.transitions.create("height", {
+    //   easing: theme.transitions.easing.sharp,
+    //   duration: theme.transitions.duration.enteringScreen
+    // })
   },
   avatarClose: {
-    alignSelf: "center",
-    width: 0,
-    heigth: 0,
-    transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen
-    }),
-    transition: theme.transitions.create("heigth", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen
-    })
+    // alignSelf: "center",
+    // width: 0,
+    // heigth: 0,
+    // transition: theme.transitions.create("width", {
+    //   easing: theme.transitions.easing.sharp,
+    //   duration: theme.transitions.duration.enteringScreen
+    // }),
+    // transition: theme.transitions.create("heigth", {
+    //   easing: theme.transitions.easing.sharp,
+    //   duration: theme.transitions.duration.enteringScreen
+    // })
   },
 
   // Fuente: https://material-ui.com/components/drawers/#mini-variant-drawer
@@ -93,7 +95,7 @@ const useStyles = makeStyles(theme => ({
       duration: theme.transitions.duration.leavingScreen
     }),
     overflowX: "hidden",
-    width: theme.spacing(7) + 1,
+    width: 0, // Mobile hidden
     [theme.breakpoints.up("sm")]: {
       width: theme.spacing(9) + 1
     }
@@ -108,7 +110,10 @@ const useStyles = makeStyles(theme => ({
   },
   content: {
     flexGrow: 1,
-    padding: theme.spacing(3)
+    paddingTop: theme.spacing(3),
+    [theme.breakpoints.up("sm")]: {
+      padding: theme.spacing(3)
+    }
   }
 }));
 
@@ -122,14 +127,19 @@ function Layout(props) {
   }
 
   return (
-    <Container>
-      <AppBar>
+    <div style={{ display: "flex" }}>
+      <AppBar
+        position="fixed"
+        className={clsx(classes.appBar, {
+          [classes.appBarShift]: open
+        })}
+      >
         <Toolbar>
           <IconButton
             color="inherit"
             aria-label="open drawer"
-            onClick={toggleDrawer}
             edge="start"
+            onClick={toggleDrawer}
             className={clsx(classes.menuButton, {
               [classes.hide]: open
             })}
@@ -155,13 +165,16 @@ function Layout(props) {
           })
         }}
       >
-        <IconButton onClick={toggleDrawer}>
-          {theme.direction === "rtl" ? (
-            <ChevronRightIcon />
-          ) : (
-            <ChevronLeftIcon />
-          )}
-        </IconButton>
+        <div className={classes.toolbar}>
+          <IconButton onClick={toggleDrawer}>
+            {theme.direction === "rtl" ? (
+              <ChevronRightIcon />
+            ) : (
+              <ChevronLeftIcon />
+            )}
+          </IconButton>
+        </div>
+        <Divider />
         <List className={classes.list}>
           <Link href="/">
             <ListItem button component="a">
@@ -191,9 +204,10 @@ function Layout(props) {
       </Drawer>
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        {props.children}
+        {/* TODO: Fix this for mobile */}
+        <Container>{props.children}</Container>
       </main>
-    </Container>
+    </div>
   );
 }
 
