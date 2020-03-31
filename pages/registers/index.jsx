@@ -6,6 +6,7 @@ import {
   Card,
   CardContent,
   Grid,
+  Snackbar,
   TextField,
   Typography,
   Paper
@@ -26,6 +27,8 @@ import {
   TableRow
 } from "@material-ui/core";
 
+import { Alert } from "@material-ui/lab";
+
 import db from "../../src/api";
 
 import AvatarPlaceholder from "../../components/AvatarPlaceholder";
@@ -39,6 +42,11 @@ function NewRegister(props) {
   const [indications, setIndications] = useState("");
   const [observations, setObservations] = useState("");
   const [searchResult, setSearchResult] = useState([]);
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success"
+  });
 
   /**
    * Debounce search
@@ -82,27 +90,57 @@ function NewRegister(props) {
 
   function handleSubmit(e) {
     e.preventDefault();
+    try {
+      const collection = db.get("records");
 
-    const collection = db.get("records");
-    console.log("ESTADO ACTUAL", db.getState());
+      if (!patient) {
+        setSnackbar({
+          open: true,
+          severity: "error",
+          message: "Seleccioná al paciente"
+        });
+      }
 
-    if (!patient || !indications || !observations) {
-      console.info("NO FUE CREADO");
-      return;
+      if (!patient || !indications || !observations) {
+        setSnackbar({
+          open: true,
+          severity: "error",
+          message: "Por favor, llená los campos necesarios"
+        });
+        return;
+      }
+
+      const result = collection
+        .push({
+          _id: shortId.generate(),
+          _doctorId: 1, // FIXME hardCoded
+          _patientId: patient._id,
+          indications,
+          observations,
+          date: new Date()
+        })
+        .write();
+
+      setSnackbar({
+        open: true,
+        severity: "success",
+        message: "El registro fue guardado exitosamente"
+      });
+    } catch (error) {
+      setSnackbar({
+        open: true,
+        severity: "error",
+        message: "No se pudo guardar el registro"
+      });
     }
+  }
 
-    const result = collection
-      .push({
-        _id: shortId.generate(),
-        _doctorId: 1, // FIXME hardCoded
-        _patientId: patient._id,
-        indications,
-        observations,
-        date: new Date()
-      })
-      .write();
-
-    console.log("FUE CREADO!", result);
+  function toggleSnackbar(message = "", severity) {
+    setSnackbar(e => ({
+      open: !e.open,
+      severity: severity || e.severity,
+      message
+    }));
   }
 
   return (
@@ -161,6 +199,16 @@ function NewRegister(props) {
           </Grid>
         </Grid>
       </form>
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={() => toggleSnackbar()}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert onClose={() => toggleSnackbar()} severity={snackbar.severity}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
       <SearchPatient
         open={modal}
         onClose={toggleModal}

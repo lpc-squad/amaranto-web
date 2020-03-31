@@ -1,5 +1,12 @@
 import Link from "next/link";
-import { Badge, Button, Grid, Paper, Typography } from "@material-ui/core";
+import {
+  Badge,
+  Button,
+  Grid,
+  Paper,
+  Tooltip,
+  Typography
+} from "@material-ui/core";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import {
   Table,
@@ -18,10 +25,16 @@ function Index({ patients = [] }) {
       <Alert severity="info">
         <AlertTitle>
           ¿Qué pensás de la aplicación? Dejanos tus comentarios por{" "}
-          <a href="mailto:facundomgordillo@gmail.com?Subject=Clinical%20Record">
+          <a
+            href="mailto:facundomgordillo@gmail.com?Subject=Clinical%20Record"
+            target="_blank"
+          >
             Email
           </a>{" "}
-          o <a href="">Twitter</a>
+          o{" "}
+          <a href="https://twitter.com/FMGordillo" target="_blank">
+            Twitter
+          </a>
         </AlertTitle>
         Estamos en etapa de desarrollo de Clínica Digital. ¡Contamos con ustedes
         para formar la mejor solución!

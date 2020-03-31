@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
-import { differenceInYears, format } from "date-fns";
+import { useEffect, useState } from "react";
+import { format } from "date-fns";
 import { Card, CardContent, Grid, Paper, Typography } from "@material-ui/core";
 import {
   Table,
@@ -35,7 +35,7 @@ function Patient({ patient }) {
   if (patient) {
     return (
       <Grid container direction="column" spacing={6}>
-        <Grid item xs={12} style={{ alignSelf: "center" }}>
+        <Grid item>
           <Card>
             <CardContent>
               <Grid container justify="space-evenly">
@@ -56,7 +56,7 @@ function Patient({ patient }) {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} style={{ alignSelf: "center" }}>
+        <Grid item style={{ alignSelf: "center" }}>
           <TableContainer component={Paper}>
             <Table aria-label="patients table">
               <TableHead>
@@ -102,7 +102,8 @@ const RecordRow = ({ record }) => {
   );
 };
 
-Patient.getInitialProps = ctx => {
+Patient.getInitialProps = async ctx => {
+  const differenceInYears = await import("date-fns/differenceInYears");
   const { id } = ctx.query;
 
   let patient = db
