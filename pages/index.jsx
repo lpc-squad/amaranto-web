@@ -4,19 +4,13 @@ import {
   Button,
   Grid,
   Paper,
-  Tooltip,
+  TableCell,
+  TableRow,
   Typography
 } from "@material-ui/core";
 import { Alert, AlertTitle } from "@material-ui/lab";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow
-} from "@material-ui/core";
 
+import Table from "../components/Table";
 import db from "../src/api";
 
 function Index({ patients = [] }) {
@@ -88,21 +82,20 @@ function Index({ patients = [] }) {
         </Grid>
       </Grid>
       <Grid item>
-        <TableContainer component={Paper}>
-          <Table aria-label="patients table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Nombre</TableCell>
-                <TableCell>Apellido</TableCell>
-                <TableCell>Acciones</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {patients.length > 0 &&
-                patients.map((i, k) => <PatientRow key={k} patient={i} />)}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <Table
+          ariaTable="patients table"
+          head={
+            <TableRow>
+              <TableCell>Nombre</TableCell>
+              <TableCell>Apellido</TableCell>
+              <TableCell>Acciones</TableCell>
+            </TableRow>
+          }
+          content={
+            patients.length > 0 &&
+            patients.map((i, k) => <PatientRow key={k} patient={i} />)
+          }
+        />
       </Grid>
     </Grid>
   );

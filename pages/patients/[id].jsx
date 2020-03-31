@@ -1,15 +1,9 @@
-import { useEffect, useState } from "react";
 import { format } from "date-fns";
-import { Card, CardContent, Grid, Paper, Typography } from "@material-ui/core";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow
-} from "@material-ui/core";
+import { useEffect, useState } from "react";
+import { TableCell, TableRow } from "@material-ui/core";
+import { Card, CardContent, Grid, Typography } from "@material-ui/core";
 
+import Table from "../../components/Table";
 import AvatarPlaceholder from "../../components/AvatarPlaceholder";
 
 import db from "../../src/api";
@@ -57,27 +51,26 @@ function Patient({ patient }) {
           </Card>
         </Grid>
         <Grid item style={{ alignSelf: "center" }}>
-          <TableContainer component={Paper}>
-            <Table aria-label="patients table">
-              <TableHead>
+          <Table
+            ariaTable="patients table"
+            head={
+              <TableRow>
+                <TableCell>Fecha</TableCell>
+                <TableCell>Observaciones</TableCell>
+                <TableCell>Prescripción</TableCell>
+              </TableRow>
+            }
+            content={
+              (records.length > 0 &&
+                records.map((i, k) => <RecordRow key={k} record={i} />)) || (
                 <TableRow>
-                  <TableCell>Fecha</TableCell>
-                  <TableCell>Observaciones</TableCell>
-                  <TableCell>Prescripción</TableCell>
+                  <TableCell>N/A</TableCell>
+                  <TableCell>N/A</TableCell>
+                  <TableCell>N/A</TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {(records.length > 0 &&
-                  records.map((i, k) => <RecordRow key={k} record={i} />)) || (
-                  <TableRow>
-                    <TableCell>N/A</TableCell>
-                    <TableCell>N/A</TableCell>
-                    <TableCell>N/A</TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
+              )
+            }
+          />
         </Grid>
       </Grid>
     );
