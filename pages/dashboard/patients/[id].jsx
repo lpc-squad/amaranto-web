@@ -3,10 +3,10 @@ import { useEffect, useState } from "react";
 import { TableCell, TableRow } from "@material-ui/core";
 import { Card, CardContent, Grid, Typography } from "@material-ui/core";
 
-import Table from "../../components/Table";
-import AvatarPlaceholder from "../../components/AvatarPlaceholder";
+import Table from "../../../components/Table";
+import AvatarPlaceholder from "../../../components/AvatarPlaceholder";
 
-import db from "../../src/api";
+import db from "../../../src/api";
 
 function Patient({ patient }) {
   const [records, setRecords] = useState([]);

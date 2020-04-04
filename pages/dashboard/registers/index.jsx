@@ -29,9 +29,9 @@ import {
 
 import { Alert } from "@material-ui/lab";
 
-import db from "../../src/api";
+import db from "../../../src/api";
 
-import AvatarPlaceholder from "../../components/AvatarPlaceholder";
+import AvatarPlaceholder from "../../../components/AvatarPlaceholder";
 
 function NewRegister(props) {
   let timeout = null; // Debounce
@@ -239,7 +239,10 @@ function Patient({ data, toggleModal }) {
             <Grid item>
               <Typography>Nombre: {data.name}</Typography>
               <Typography>Documento: {data.documentId}</Typography>
-              <Link href="/patients/[id]" as={`/patients/${data._id}`}>
+              <Link
+                href="/dashboard/patients/[id]"
+                as={`/dashboard/patients/${data._id}`}
+              >
                 <Button variant="outlined" component="a">
                   Ver ficha completa
                 </Button>

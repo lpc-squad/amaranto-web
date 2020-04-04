@@ -184,7 +184,7 @@ function Layout(props) {
               <ListItemText>Inicio</ListItemText>
             </ListItem>
           </Link>
-          <Link href="/">
+          <Link href="/dashboard">
             <ListItem button component="a">
               <ListItemIcon>
                 <PatientsIcon />
