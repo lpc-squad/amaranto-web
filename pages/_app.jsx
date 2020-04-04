@@ -1,6 +1,7 @@
 import React from "react";
 import App from "next/app";
 import Head from "next/head";
+import { Auth0Provider } from "use-auth0-hooks";
 import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
@@ -22,7 +23,7 @@ export default class MyApp extends App {
     return (
       <React.Fragment>
         <Head>
-          <title>My page</title>
+          <title>Clinical Record</title>
           <meta
             name="viewport"
             content="minimum-scale=1, initial-scale=1, width=device-width"
@@ -32,7 +33,13 @@ export default class MyApp extends App {
           {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
           <CssBaseline />
           <Layout>
-            <Component {...pageProps} />
+            <Auth0Provider
+              domain={"clinical-record.auth0.com"}
+              redirectUri={"http://localhost:3000/"}
+              clientId={"fMa0FV92OSzAd9dq8bH3PgH3SHnZJJ3W"}
+            >
+              <Component {...pageProps} />
+            </Auth0Provider>
           </Layout>
         </ThemeProvider>
       </React.Fragment>

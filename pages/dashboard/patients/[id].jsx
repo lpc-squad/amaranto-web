@@ -1,29 +1,34 @@
-import { differenceInYears, format, parseISO } from "date-fns";
-import {
-  Avatar,
-  Card,
-  CardContent,
-  Grid,
-  Paper,
-  Typography
-} from "@material-ui/core";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow
-} from "@material-ui/core";
+import { format } from "date-fns";
+import { useEffect, useState } from "react";
+import { TableCell, TableRow } from "@material-ui/core";
+import { Card, CardContent, Grid, Typography } from "@material-ui/core";
 
-import AvatarPlaceholder from "../../components/AvatarPlaceholder";
+import Table from "../../../components/Table";
+import AvatarPlaceholder from "../../../components/AvatarPlaceholder";
 
-import db from "../../src/api";
+import db from "../../../src/api";
 
-function Patient({ patient = {}, records = [] }) {
+function Patient({ patient }) {
+  const [records, setRecords] = useState([]);
+
+  useEffect(() => {
+    let _records = db
+      .get("records")
+      .filter(p => p._patientId === patient._id)
+      .value();
+
+    if (!Array.isArray(_records) && !!_records) {
+      _records = [_records];
+    }
+
+    if (_records) {
+      setRecords(_records);
+    }
+  }, [patient]);
+
   if (patient) {
     return (
-      <Grid container direction="column" spacing={4}>
+      <Grid container direction="column" spacing={6}>
         <Grid item>
           <Card>
             <CardContent>
@@ -45,28 +50,27 @@ function Patient({ patient = {}, records = [] }) {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item>
-          <TableContainer component={Paper}>
-            <Table aria-label="patients table">
-              <TableHead>
+        <Grid item style={{ alignSelf: "center" }}>
+          <Table
+            ariaTable="patients table"
+            head={
+              <TableRow>
+                <TableCell>Fecha</TableCell>
+                <TableCell>Observaciones</TableCell>
+                <TableCell>Prescripción</TableCell>
+              </TableRow>
+            }
+            content={
+              (records.length > 0 &&
+                records.map((i, k) => <RecordRow key={k} record={i} />)) || (
                 <TableRow>
-                  <TableCell>Fecha</TableCell>
-                  <TableCell>Observaciones</TableCell>
-                  <TableCell>Prescripción</TableCell>
+                  <TableCell>N/A</TableCell>
+                  <TableCell>N/A</TableCell>
+                  <TableCell>N/A</TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {(records.length > 0 &&
-                  records.map((i, k) => <RecordRow key={k} record={i} />)) || (
-                  <TableRow>
-                    <TableCell>N/A</TableCell>
-                    <TableCell>N/A</TableCell>
-                    <TableCell>N/A</TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
+              )
+            }
+          />
         </Grid>
       </Grid>
     );
@@ -91,22 +95,14 @@ const RecordRow = ({ record }) => {
   );
 };
 
-Patient.getInitialProps = ctx => {
+Patient.getInitialProps = async ctx => {
+  const { differenceInYears } = await import("date-fns");
   const { id } = ctx.query;
 
   let patient = db
     .get("patients")
     .find({ _id: id })
     .value();
-
-  let records = db
-    .get("records")
-    .find({ _patientId: id })
-    .value();
-
-  if (!Array.isArray(records) && !!records) {
-    records = [records];
-  }
 
   // Server Side calculation, Is this OK?
   patient.age = differenceInYears(
@@ -115,8 +111,7 @@ Patient.getInitialProps = ctx => {
   );
 
   return {
-    patient,
-    records
+    patient
   };
 };
 
