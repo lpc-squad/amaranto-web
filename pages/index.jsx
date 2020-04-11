@@ -3,7 +3,7 @@ import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 function Index(props) {
   // TODO: Para hacer el efecto Slack https://slack.com/intl/en-ar/
   // Fuente: https://material-ui.com/components/app-bar/#scrolling
-  const trigger = useScrollTrigger({ target: window ? window() : undefined });
+  // const trigger = useScrollTrigger({ target: window ? window() : undefined });
   return (
     <>
       <header style={{ position: "fixed", zIndex: 9 }}>
