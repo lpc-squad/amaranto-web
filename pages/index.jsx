@@ -3,6 +3,7 @@ import {
   Button,
   Card,
   CardContent,
+  CircularProgress,
   Container,
   Grid,
   Paper,
@@ -10,16 +11,50 @@ import {
   Typography,
 } from "@material-ui/core";
 
-import Link from "next/link";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import ArrowDownIcon from "@material-ui/icons/ExpandMore";
+
+import { useRouter } from "next/router";
+import Link from "next/link";
+import { useEffect } from "react";
+import { useAuth } from "use-auth0-hooks";
 
 function Index(props) {
   // TODO: Para hacer el efecto Slack https://slack.com/intl/en-ar/
   // Fuente: https://material-ui.com/components/app-bar/#scrolling
   // const trigger = useScrollTrigger({ target: window ? window() : undefined });
+  const router = useRouter();
+  const { isLoading, user } = useAuth();
+
+  useEffect(() => {
+    if (!isLoading && user) {
+      router.push("/dashboard");
+    }
+  }, [isLoading]);
+
   return (
     <>
+      <Grid
+        container
+        className="loading-screen"
+        style={{
+          display: (isLoading && "flex") || "none",
+          zIndex: 999,
+          width: "100vw",
+          height: "100vh",
+          position: "fixed",
+          top: 0,
+          left: 0,
+          backgroundColor: "black",
+          transition: "display 2s",
+        }}
+        justify="center"
+        alignItems="center"
+      >
+        <Grid item>
+          <CircularProgress />
+        </Grid>
+      </Grid>
       <header
         style={{
           display: "flex",
@@ -87,12 +122,13 @@ function Index(props) {
           </div>
           <ArrowDownIcon
             style={{
+              marginBottom: "2rem",
               width: "3em",
               height: "3em",
               bottom: 0,
               position: "absolute",
               left: "calc(100vw / 2)",
-              animation: "arrow 2s linear infinite",
+              animation: "arrow 2s ease-in-out infinite",
             }}
           />
         </section>
@@ -180,13 +216,16 @@ function Index(props) {
           </section>
         </Container>
       </main>
-      <style jsx>{`
+      <style jsx global>{`
         @keyframes arrow {
-          from {
+          0% {
             transform: translateY(0);
           }
-          to {
+          50% {
             transform: translateY(50%);
+          }
+          100% {
+            transform: translateY(0);
           }
         }
       `}</style>

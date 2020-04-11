@@ -3,12 +3,13 @@ import Link from "next/link";
 import {
   Badge,
   Button,
+  CircularProgress,
   Grid,
   TableCell,
   TableRow,
-  Typography
+  Typography,
 } from "@material-ui/core";
-import { useAuth } from "use-auth0-hooks";
+import { useAuth, withAuth, withLoginRequired } from "use-auth0-hooks";
 import { Alert, AlertTitle } from "@material-ui/lab";
 
 import Table from "../../components/Table";
@@ -16,16 +17,16 @@ import db from "../../src/api";
 
 function Index({ patients = [] }) {
   const {
-    loading,
+    isLoading,
     login,
     logout,
     isAuthenticated,
     accessToken,
     error,
-    user
+    user,
   } = useAuth({
     audience: "http://clinicalrecord.com.ar/api",
-    scope: "read:things"
+    scope: "read:things",
   });
 
   useEffect(() => {
@@ -33,7 +34,8 @@ function Index({ patients = [] }) {
   }, [accessToken, user, error]);
 
   useEffect(() => {
-    if (loading) {
+    console.log(isLoading);
+    if (isLoading) {
       return;
     } else {
       // fetch("http://localhost:8080", {
@@ -43,110 +45,133 @@ function Index({ patients = [] }) {
       //   .then(res => console.log(res))
       //   .catch(err => console.error(err));
     }
-  }, [loading, isAuthenticated]);
+  }, [isLoading, isAuthenticated]);
 
   return (
-    <Grid container direction="column" spacing={6}>
-      <Alert severity="info">
-        <AlertTitle>
-          ¿Qué pensás de la aplicación? Dejanos tus comentarios por{" "}
-          <a
-            href="mailto:facundomgordillo@gmail.com?Subject=Clinical%20Record"
-            target="_blank"
-          >
-            Email
-          </a>{" "}
-          o{" "}
-          <a href="https://twitter.com/FMGordillo" target="_blank">
-            Twitter
-          </a>
-        </AlertTitle>
-        Estamos en etapa de desarrollo de Clínica Digital. ¡Contamos con ustedes
-        para formar la mejor solución!
-      </Alert>
-      <Grid item>
-        <Badge
-          badgeContent={"BETA"}
-          color="secondary"
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "right"
-          }}
-        >
-          <Typography variant="h2">Clinica Digital</Typography>
-        </Badge>
-      </Grid>
-      <Grid item>
-        {(!isAuthenticated && (
-          <button
-            disabled={loading}
-            onClick={() =>
-              login({
-                appState: { returnTo: { pathname: "/patients" } },
-                // HACK Esto hace que funcione
-                audience: "http://clinicalrecord.com.ar/api"
-              })
-            }
-          >
-            Necesitas loguearte para acceder
-          </button>
-        )) || (
-          <button disabled={loading} onClick={() => logout()}>
-            Andate
-          </button>
-        )}
-        <Grid container spacing={4} style={{ justifyContent: "center" }}>
-          <Grid item>
-            <Link href="/dashboard/registers">
-              <Button
-                component="a"
-                size="large"
-                variant="contained"
-                color="primary"
-              >
-                Crear registro
-              </Button>
-            </Link>
-          </Grid>
-          <Grid item>
-            <Link href="/dashboard/patients">
-              <Button
-                disabled
-                component="a"
-                size="large"
-                variant="contained"
-                color="secondary"
-              >
-                Crear nuevo paciente
-              </Button>
-            </Link>
-          </Grid>
-          <Grid item>
-            <Link href="/">
-              <Button component="a" size="large" variant="contained" disabled>
-                Editar configuración
-              </Button>
-            </Link>
-          </Grid>
+    <>
+      <Grid
+        container
+        className="loading-screen"
+        style={{
+          display: (isLoading && "flex") || "none",
+          zIndex: 9999,
+          width: "100vw",
+          height: "100vh",
+          position: "fixed",
+          top: 0,
+          left: 0,
+          backgroundColor: "black",
+          transition: "display 2s",
+        }}
+        justify="center"
+        alignItems="center"
+      >
+        <Grid item>
+          <CircularProgress />
         </Grid>
       </Grid>
-      <Grid item>
-        <Table
-          ariaTable="patients table"
-          head={
-            <TableRow>
-              <TableCell>Nombre</TableCell>
-              <TableCell>Apellido</TableCell>
-              <TableCell>Acciones</TableCell>
-            </TableRow>
-          }
-          content={
-            patients.length > 0 &&
-            patients.map((i, k) => <PatientRow key={k} patient={i} />)
-          }
-        />
+      <Grid container direction="column" spacing={6}>
+        <Alert severity="info">
+          <AlertTitle>
+            ¿Qué pensás de la aplicación? Dejanos tus comentarios por{" "}
+            <a
+              href="mailto:facundomgordillo@gmail.com?Subject=Clinical%20Record"
+              target="_blank"
+            >
+              Email
+            </a>{" "}
+            o{" "}
+            <a href="https://twitter.com/FMGordillo" target="_blank">
+              Twitter
+            </a>
+          </AlertTitle>
+          Estamos en etapa de desarrollo de Clínica Digital. ¡Contamos con
+          ustedes para formar la mejor solución!
+        </Alert>
+        <Grid item>
+          <Badge
+            badgeContent={"BETA"}
+            color="secondary"
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+          >
+            <Typography variant="h2">Clinica Digital</Typography>
+          </Badge>
+        </Grid>
+        <Grid item>
+          {(!isAuthenticated && (
+            <button
+              disabled={isLoading}
+              onClick={() =>
+                login({
+                  appState: { returnTo: { pathname: "/patients" } },
+                  // HACK Esto hace que funcione
+                  audience: "http://clinicalrecord.com.ar/api",
+                })
+              }
+            >
+              Necesitas loguearte para acceder
+            </button>
+          )) || (
+            <button disabled={isLoading} onClick={() => logout()}>
+              Andate
+            </button>
+          )}
+          <Grid container spacing={4} style={{ justifyContent: "center" }}>
+            <Grid item>
+              <Link href="/dashboard/registers">
+                <Button
+                  component="a"
+                  size="large"
+                  variant="contained"
+                  color="primary"
+                >
+                  Crear registro
+                </Button>
+              </Link>
+            </Grid>
+            <Grid item>
+              <Link href="/dashboard/patients">
+                <Button
+                  disabled
+                  component="a"
+                  size="large"
+                  variant="contained"
+                  color="secondary"
+                >
+                  Crear nuevo paciente
+                </Button>
+              </Link>
+            </Grid>
+            <Grid item>
+              <Link href="/">
+                <Button component="a" size="large" variant="contained" disabled>
+                  Editar configuración
+                </Button>
+              </Link>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item>
+          <Table
+            ariaTable="patients table"
+            head={
+              <TableRow>
+                <TableCell>Nombre</TableCell>
+                <TableCell>Apellido</TableCell>
+                <TableCell>Acciones</TableCell>
+              </TableRow>
+            }
+            content={
+              patients.length > 0 &&
+              patients.map((i, k) => <PatientRow key={k} patient={i} /> || [])
+            }
+          />
+        </Grid>
       </Grid>
-    </Grid>
+    </>
   );
 }
 
@@ -167,14 +192,11 @@ const PatientRow = ({ patient }) => (
   </TableRow>
 );
 
-Index.getInitialProps = ctx => {
-  const patients = db
-    .get("patients")
-    .cloneDeep()
-    .value();
+Index.getInitialProps = (ctx) => {
+  const patients = db.get("patients").cloneDeep().value();
   return {
-    patients
+    patients,
   };
 };
 
-export default Index;
+export default withLoginRequired(withAuth(Index));

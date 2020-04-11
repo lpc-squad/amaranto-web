@@ -129,10 +129,12 @@ function Layout(props) {
     setOpen((o) => !o);
   }
 
-  Router.events.on("routeChangeStart", checkIfRootPage);
-
   useEffect(() => {
+    Router.events.on("routeChangeStart", checkIfRootPage);
     checkIfRootPage();
+    return () => {
+      Router.events.off("routeChangeStart");
+    };
   }, [router, isRoot]);
 
   function checkIfRootPage() {
