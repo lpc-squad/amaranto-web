@@ -6,6 +6,7 @@ import {
   Container,
   Grid,
   Paper,
+  TextField,
   Typography,
 } from "@material-ui/core";
 
@@ -33,7 +34,11 @@ function Index(props) {
         <a href="#producto">Inicio</a>
         <a href="#planes">Inicio</a>
         <a href="#contacto">Inicio</a>
-        <Button variant="contained">Entrar</Button>
+        <Link href="/dashboard">
+          <Button variant="contained" component="a">
+            Entrar
+          </Button>
+        </Link>
       </header>
       <main>
         <section id="#intro" style={{ height: "100vh" }}>
@@ -157,9 +162,20 @@ function Index(props) {
           <section id="contacto" style={{ height: "100vh" }}>
             <Typography variant="h2">Contacto</Typography>
             <Paper>
-              <form>
-                <input type="text" />
-              </form>
+              <Grid container direction="column">
+                <Grid item>
+                  <Typography variant="h4" component="h3">
+                    En qué podemos ayudarte
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Grid container component="form">
+                    <Grid item>
+                      <TextField multiline rows="4" />
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
             </Paper>
           </section>
         </Container>
