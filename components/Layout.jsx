@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import Router, { useRouter } from "next/router";
 import {
   AppBar,
   Avatar,
@@ -129,11 +129,19 @@ function Layout(props) {
     setOpen((o) => !o);
   }
 
+  Router.events.on("routeChangeStart", checkIfRootPage);
+
   useEffect(() => {
+    checkIfRootPage();
+  }, [router, isRoot]);
+
+  function checkIfRootPage() {
     if (router.pathname === "/") {
       setIsRoot(true);
+    } else {
+      setIsRoot(false);
     }
-  }, [router, isRoot]);
+  }
 
   if (isRoot) {
     return props.children;
