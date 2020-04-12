@@ -23,38 +23,9 @@ function Index(props) {
   // TODO: Para hacer el efecto Slack https://slack.com/intl/en-ar/
   // Fuente: https://material-ui.com/components/app-bar/#scrolling
   // const trigger = useScrollTrigger({ target: window ? window() : undefined });
-  const router = useRouter();
-  const { isLoading, user } = useAuth();
-
-  useEffect(() => {
-    if (!isLoading && user) {
-      router.push("/dashboard");
-    }
-  }, [isLoading]);
 
   return (
     <>
-      <Grid
-        container
-        className="loading-screen"
-        style={{
-          display: (isLoading && "flex") || "none",
-          zIndex: 999,
-          width: "100vw",
-          height: "100vh",
-          position: "fixed",
-          top: 0,
-          left: 0,
-          backgroundColor: "black",
-          transition: "display 2s",
-        }}
-        justify="center"
-        alignItems="center"
-      >
-        <Grid item>
-          <CircularProgress />
-        </Grid>
-      </Grid>
       <header
         style={{
           display: "flex",

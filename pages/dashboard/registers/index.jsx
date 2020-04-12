@@ -9,14 +9,14 @@ import {
   Snackbar,
   TextField,
   Typography,
-  Paper
+  Paper,
 } from "@material-ui/core";
 
 import {
   Dialog,
   DialogContent,
   DialogContentText,
-  DialogTitle
+  DialogTitle,
 } from "@material-ui/core";
 
 import {
@@ -24,7 +24,7 @@ import {
   TableHead,
   TableBody,
   TableCell,
-  TableRow
+  TableRow,
 } from "@material-ui/core";
 
 import { Alert } from "@material-ui/lab";
@@ -45,7 +45,7 @@ function NewRegister(props) {
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
-    severity: "success"
+    severity: "success",
   });
 
   /**
@@ -66,7 +66,7 @@ function NewRegister(props) {
   }
 
   function toggleModal() {
-    setModal(m => !m);
+    setModal((m) => !m);
   }
 
   function searchPatient(text) {
@@ -78,7 +78,7 @@ function NewRegister(props) {
     const result = db
       .get("patients")
       .filter(
-        o =>
+        (o) =>
           o.name.toLowerCase().includes(txt) ||
           o.surname.toLowerCase().includes(txt) ||
           o.documentId.toString().includes(txt)
@@ -97,7 +97,7 @@ function NewRegister(props) {
         setSnackbar({
           open: true,
           severity: "error",
-          message: "Seleccioná al paciente"
+          message: "Seleccioná al paciente",
         });
       }
 
@@ -105,7 +105,7 @@ function NewRegister(props) {
         setSnackbar({
           open: true,
           severity: "error",
-          message: "Por favor, llená los campos necesarios"
+          message: "Por favor, llená los campos necesarios",
         });
         return;
       }
@@ -117,29 +117,29 @@ function NewRegister(props) {
           _patientId: patient._id,
           indications,
           observations,
-          date: new Date()
+          date: new Date(),
         })
         .write();
 
       setSnackbar({
         open: true,
         severity: "success",
-        message: "El registro fue guardado exitosamente"
+        message: "El registro fue guardado exitosamente",
       });
     } catch (error) {
       setSnackbar({
         open: true,
         severity: "error",
-        message: "No se pudo guardar el registro"
+        message: "No se pudo guardar el registro",
       });
     }
   }
 
   function toggleSnackbar(message = "", severity) {
-    setSnackbar(e => ({
+    setSnackbar((e) => ({
       open: !e.open,
       severity: severity || e.severity,
-      message
+      message,
     }));
   }
 
@@ -164,7 +164,7 @@ function NewRegister(props) {
                           id="observations"
                           variant="outlined"
                           label="🩺Motivo de consulta, observaciones"
-                          onChange={e => setObservations(e.target.value)}
+                          onChange={(e) => setObservations(e.target.value)}
                         />
                       </Grid>
                       <Grid item>
@@ -176,7 +176,7 @@ function NewRegister(props) {
                           variant="outlined"
                           label="💊Indicaciones para el paciente"
                           placeholder="Medicamentos, tratamientos..."
-                          onChange={e => setIndications(e.target.value)}
+                          onChange={(e) => setIndications(e.target.value)}
                         />
                       </Grid>
                     </Grid>
@@ -223,7 +223,6 @@ function NewRegister(props) {
 
 function Patient({ data, toggleModal }) {
   if (data) {
-    console.log(data);
     return (
       <Card>
         <CardContent>
@@ -269,7 +268,7 @@ function SearchPatient({
   onClose,
   handleChange,
   selectPatient,
-  searchResult = []
+  searchResult = [],
 }) {
   return (
     <Dialog onClose={onClose} open={open}>

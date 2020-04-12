@@ -1,5 +1,5 @@
-function CreatePatient() {
+function Patients() {
   return <p>Alo</p>;
 }
 
-export default CreatePatient;
+export default Patients;

@@ -168,9 +168,16 @@ function Layout(props) {
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" noWrap>
-              Clinica Digital
-            </Typography>
+            <Link href="/">
+              <Typography
+                variant="h6"
+                noWrap
+                component="a"
+                style={{ cursor: "pointer" }}
+              >
+                Clinica Digital
+              </Typography>
+            </Link>
           </Toolbar>
         </AppBar>
         <Drawer

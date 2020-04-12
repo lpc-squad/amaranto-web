@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   Badge,
@@ -29,22 +29,32 @@ function Index({ patients = [] }) {
     scope: "read:things",
   });
 
-  useEffect(() => {
-    console.log(accessToken, error, user);
-  }, [accessToken, user, error]);
+  const [loading, setLoading] = useState(true); // Catch de useAuth() con demoras
+
+  function getReturnTo() {
+    if (window && window.location) {
+      return {
+        returnTo: {
+          pathname: window.location.pathname,
+          query: parse(window.location.search),
+        },
+      };
+    }
+
+    return {};
+  }
 
   useEffect(() => {
-    console.log(isLoading);
-    if (isLoading) {
-      return;
-    } else {
-      // fetch("http://localhost:8080", {
-      //   headers: { Authorization: `Bearer ${accessToken}` }
-      // })
-      //   .then(res => res.json())
-      //   .then(res => console.log(res))
-      //   .catch(err => console.error(err));
-    }
+    console.log(isLoading, isAuthenticated);
+    if (!isLoading && !isAuthenticated) {
+      login({ appState: getReturnTo() });
+    } else if (!isLoading || isAuthenticated) setLoading(false);
+    // fetch("http://localhost:8080",  {
+    //   headers: { Authorization: `Bearer ${accessToken}` }
+    // })
+    //   .then(res => res.json())
+    //   .then(res => console.log(res))
+    //   .catch(err => console.error(err));
   }, [isLoading, isAuthenticated]);
 
   return (
@@ -53,7 +63,7 @@ function Index({ patients = [] }) {
         container
         className="loading-screen"
         style={{
-          display: (isLoading && "flex") || "none",
+          display: (loading && "flex") || "none",
           zIndex: 9999,
           width: "100vw",
           height: "100vh",
@@ -103,7 +113,7 @@ function Index({ patients = [] }) {
         <Grid item>
           {(!isAuthenticated && (
             <button
-              disabled={isLoading}
+              disabled={loading}
               onClick={() =>
                 login({
                   appState: { returnTo: { pathname: "/patients" } },
@@ -115,7 +125,7 @@ function Index({ patients = [] }) {
               Necesitas loguearte para acceder
             </button>
           )) || (
-            <button disabled={isLoading} onClick={() => logout()}>
+            <button disabled={loading} onClick={() => logout()}>
               Andate
             </button>
           )}
@@ -133,9 +143,8 @@ function Index({ patients = [] }) {
               </Link>
             </Grid>
             <Grid item>
-              <Link href="/dashboard/patients">
+              <Link href="/dashboard/patients/new">
                 <Button
-                  disabled
                   component="a"
                   size="large"
                   variant="contained"
@@ -177,8 +186,8 @@ function Index({ patients = [] }) {
 
 const PatientRow = ({ patient }) => (
   <TableRow>
-    <TableCell>{patient.name}</TableCell>
-    <TableCell>{patient.surname}</TableCell>
+    <TableCell>{patient.first_name}</TableCell>
+    <TableCell>{patient.last_name}</TableCell>
     <TableCell>
       <Link
         href="/dashboard/patients/[id]"
@@ -194,9 +203,22 @@ const PatientRow = ({ patient }) => (
 
 Index.getInitialProps = (ctx) => {
   const patients = db.get("patients").cloneDeep().value();
+  const users = db
+    .get("users")
+    .reduce((acc, user) => {
+      const patient = patients.find((p) => p.user_id === user._id);
+      if (!patient) {
+        return acc;
+      } else {
+        return [...acc, { ...user, ...patient }];
+      }
+    }, [])
+    .value();
+
   return {
-    patients,
+    patients: users,
   };
 };
 
-export default withLoginRequired(withAuth(Index));
+// export default withLoginRequired(Index);
+export default Index;
