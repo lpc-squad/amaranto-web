@@ -84,8 +84,10 @@
 
   <h1>Amaranto</h1>
   <p>
-    ¡Hola! Estamos todavía construyendo la aplicación 🦺, estimamos que dentro de
-    <code>{release_date}</code>
+    ¡Hola! Estamos todavía construyendo la aplicación, estimamos que dentro de
+    <b>
+      <code>{release_date}</code>
+    </b>
     estará lista.
   </p>
   <a href="https://forms.gle/D38Pdm2EPHBXeRjy5" target="_blank">
