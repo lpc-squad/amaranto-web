@@ -1,38 +1,22 @@
 {
-  "name": "clinical-client",
+  "name": "svelte-app",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
   "scripts": {
-    "dev": "next",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "analyze": "cross-env ANALYZE=true next build",
-    "analyze:server": "cross-env BUNDLE_ANALYZE=server next build",
-    "analyze:browser": "cross-env BUNDLE_ANALYZE=browser next build"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@auth0/auth0-spa-js": "^1.6.5",
-    "@material-ui/core": "^4.9.8",
-    "@material-ui/icons": "^4.9.1",
-    "@material-ui/lab": "^4.0.0-alpha.47",
-    "clsx": "^1.1.0",
-    "date-fns": "^2.11.1",
-    "formik": "^2.1.4",
-    "lowdb": "^1.0.0",
-    "next": "^9.3.2",
-    "prop-types": "^15.7.2",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
-    "shortid": "^2.2.15",
-    "styled-components": "^5.0.0",
-    "use-auth0-hooks": "^0.7.0",
-    "yup": "^0.28.1"
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "start": "sirv public"
   },
   "devDependencies": {
-    "@next/bundle-analyzer": "^9.3.3",
-    "cross-env": "^7.0.2"
+    "@rollup/plugin-commonjs": "^11.0.0",
+    "@rollup/plugin-node-resolve": "^7.0.0",
+    "rollup": "^1.20.0",
+    "rollup-plugin-livereload": "^1.0.0",
+    "rollup-plugin-svelte": "^5.0.3",
+    "rollup-plugin-terser": "^5.1.2",
+    "svelte": "^3.0.0"
+  },
+  "dependencies": {
+    "date-fns": "^2.12.0",
+    "sirv-cli": "^0.4.4"
   }
 }
