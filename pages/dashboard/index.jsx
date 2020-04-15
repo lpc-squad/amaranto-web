@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import querystring from "querystring";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import {
   Badge,
   Button,
@@ -33,10 +34,11 @@ function Index({ patients = [] }) {
 
   function getReturnTo() {
     if (window && window.location) {
+      console.log(window);
       return {
         returnTo: {
           pathname: window.location.pathname,
-          query: parse(window.location.search),
+          query: querystring.decode(window.location.search),
         },
       };
     }
@@ -45,8 +47,7 @@ function Index({ patients = [] }) {
   }
 
   useEffect(() => {
-    console.log(isLoading, isAuthenticated);
-    if (!isLoading && !isAuthenticated) {
+    if (!isAuthenticated && user === undefined) {
       login({ appState: getReturnTo() });
     } else if (!isLoading || isAuthenticated) setLoading(false);
     // fetch("http://localhost:8080",  {
@@ -55,7 +56,7 @@ function Index({ patients = [] }) {
     //   .then(res => res.json())
     //   .then(res => console.log(res))
     //   .catch(err => console.error(err));
-  }, [isLoading, isAuthenticated]);
+  }, [isLoading, isAuthenticated, user]);
 
   return (
     <>

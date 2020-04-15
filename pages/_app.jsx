@@ -45,8 +45,8 @@ export default class MyApp extends App {
               // TODO: Cuidado con esto, como hacemos?
               redirectUri={
                 (process.env.NODE_ENV !== "production" &&
-                  "http://localhost:3000") ||
-                "https://amaranto.app"
+                  "http://localhost:3000/dashboard") ||
+                "https://amaranto.app/dashboard"
               }
               onRedirectCallback={onRedirectCallback}
               clientId={"fMa0FV92OSzAd9dq8bH3PgH3SHnZJJ3W"}
