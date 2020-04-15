@@ -3,27 +3,25 @@ import {
   Button,
   Card,
   CardContent,
-  CircularProgress,
   Container,
   Grid,
   Paper,
   TextField,
   Typography,
 } from "@material-ui/core";
-
-import useScrollTrigger from "@material-ui/core/useScrollTrigger";
+import { useTheme } from "@material-ui/core/styles";
 import ArrowDownIcon from "@material-ui/icons/ExpandMore";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
-import { useRouter } from "next/router";
 import Link from "next/link";
-import { useEffect } from "react";
-import { useAuth } from "use-auth0-hooks";
 
 function Index(props) {
   // TODO: Para hacer el efecto Slack https://slack.com/intl/en-ar/
   // Fuente: https://material-ui.com/components/app-bar/#scrolling
   // const trigger = useScrollTrigger({ target: window ? window() : undefined });
-
+  const theme = useTheme();
+  const upSm = useMediaQuery(theme.breakpoints.up("sm"));
+  const upMd = useMediaQuery(theme.breakpoints.up("md"));
   return (
     <>
       <header
@@ -60,6 +58,7 @@ function Index(props) {
               maxHeight: "100vh",
             }}
           >
+            <source src="/index_video.webcm" type="video/webcm" />
             <source src="/index_video.mp4" type="video/mp4" />
           </video>
           <div
@@ -75,7 +74,7 @@ function Index(props) {
           <div
             style={{
               display: "flex",
-              width: "950px",
+              width: (upMd && "900px") || (upSm && "640px") || "340px",
               height: "50%",
               position: "absolute",
               alignItems: "center",
@@ -85,7 +84,9 @@ function Index(props) {
             }}
           >
             <Container>
-              <Typography variant="h1">Clinical Record</Typography>
+              <Typography variant={(upSm && "h1") || "h2"} component="h2">
+                Amaranto
+              </Typography>
               <Typography variant="subtitle1">
                 Gestioná tu clínica, de la mejor forma
               </Typography>
