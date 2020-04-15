@@ -21,7 +21,7 @@ function TableComponent(props) {
 TableComponent.propTypes = {
   ariaTable: string,
   head: object.isRequired,
-  content: oneOfType([(arrayOf(object), object)]).isRequired,
+  content: oneOfType([arrayOf(object), object]).isRequired,
 };
 
 export default TableComponent;
