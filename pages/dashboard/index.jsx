@@ -1,18 +1,18 @@
-import querystring from "querystring";
 import Link from "next/link";
+import querystring from "querystring";
 import { useEffect, useState } from "react";
 import {
   Badge,
   Button,
-  CircularProgress,
   Grid,
   TableCell,
   TableRow,
   Typography,
 } from "@material-ui/core";
-import { useAuth, withAuth, withLoginRequired } from "use-auth0-hooks";
+import { useAuth } from "use-auth0-hooks";
 import { Alert, AlertTitle } from "@material-ui/lab";
 
+import Loading from "../../components/Loading";
 import Table from "../../components/Table";
 import db from "../../src/api";
 
@@ -60,27 +60,7 @@ function Index({ patients = [] }) {
 
   return (
     <>
-      <Grid
-        container
-        className="loading-screen"
-        style={{
-          display: (loading && "flex") || "none",
-          zIndex: 9999,
-          width: "100vw",
-          height: "100vh",
-          position: "fixed",
-          top: 0,
-          left: 0,
-          backgroundColor: "black",
-          transition: "display 2s",
-        }}
-        justify="center"
-        alignItems="center"
-      >
-        <Grid item>
-          <CircularProgress />
-        </Grid>
-      </Grid>
+      <Loading loading={loading} />
       <Grid container direction="column" spacing={6}>
         <Alert severity="info">
           <AlertTitle>
