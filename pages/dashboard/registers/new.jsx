@@ -33,7 +33,7 @@ import db from "../../../src/api";
 
 import AvatarPlaceholder from "../../../components/AvatarPlaceholder";
 
-function NewRegister(props) {
+function CreateRegister(props) {
   let timeout = null; // Debounce
   const inputContainer = useRef(""); // Debounce
 
@@ -317,4 +317,4 @@ function SearchPatient({
   );
 }
 
-export default NewRegister;
+export default CreateRegister;

@@ -112,7 +112,7 @@ function Index({ patients = [] }) {
           )}
           <Grid container spacing={4} style={{ justifyContent: "center" }}>
             <Grid item>
-              <Link href="/dashboard/registers">
+              <Link href="/dashboard/registers/new">
                 <Button
                   component="a"
                   size="large"
