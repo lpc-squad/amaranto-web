@@ -27,7 +27,7 @@ function LoadingComponent({ loading }) {
   );
 }
 
-Loading.propTypes = {
+LoadingComponent.propTypes = {
   loading: PropTypes.bool.isRequired,
 };
 
