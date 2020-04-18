@@ -130,15 +130,16 @@ function Layout(props) {
   }
 
   useEffect(() => {
-    Router.events.on("routeChangeStart", checkIfRootPage);
-    checkIfRootPage();
+    Router.events.on("routeChangeStart", checkNonDashboardPages);
+    checkNonDashboardPages();
     return () => {
       Router.events.off("routeChangeStart");
     };
   }, [router, isRoot]);
 
-  function checkIfRootPage() {
-    if (router.pathname === "/") {
+  function checkNonDashboardPages() {
+    const avoidRoutes = ["/", "/redirect/first-time-register"];
+    if (avoidRoutes.find((value) => router.pathname === value)) {
       setIsRoot(true);
     } else {
       setIsRoot(false);
