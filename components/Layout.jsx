@@ -123,7 +123,7 @@ function Layout(props) {
   const router = useRouter();
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-  const [isRoot, setIsRoot] = useState(false);
+  const [isRoot, setIsRoot] = useState(true);
 
   function toggleDrawer() {
     setOpen((o) => !o);
