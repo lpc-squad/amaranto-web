@@ -5,6 +5,9 @@ import Router, { useRouter } from "next/router";
 import {
   AppBar,
   Avatar,
+  // TODO: Agregar un Breadcrum para saber en qué "página" o "estado" estás
+  // https://material-ui.com/components/breadcrumbs/
+  // Breadcrumbs,
   Container,
   Drawer,
   Divider,
