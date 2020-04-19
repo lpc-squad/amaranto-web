@@ -55,6 +55,7 @@ function CreateRegister(props) {
     clearTimeout(timeout);
     timeout = setTimeout(() => {
       // TODO: No será demasiado?
+      // @ts-ignore
       const { value } = inputContainer.current.children[1].children[0];
       searchPatient(value);
     }, 400);
@@ -110,7 +111,7 @@ function CreateRegister(props) {
         return;
       }
 
-      const result = collection
+      collection
         .push({
           _id: shortId.generate(),
           _doctorId: 1, // FIXME hardCoded
@@ -135,7 +136,7 @@ function CreateRegister(props) {
     }
   }
 
-  function toggleSnackbar(message = "", severity) {
+  function toggleSnackbar(message: string = "", severity: any = "info") {
     setSnackbar((e) => ({
       open: !e.open,
       severity: severity || e.severity,
@@ -199,6 +200,7 @@ function CreateRegister(props) {
           </Grid>
         </Grid>
       </form>
+      {/* TODO: Definir Color en la func */}
       <Snackbar
         open={snackbar.open}
         autoHideDuration={6000}
@@ -226,14 +228,10 @@ function Patient({ data, toggleModal }) {
     return (
       <Card>
         <CardContent>
-          <Grid
-            container
-            alignItems="center"
-            justifycontent="center"
-            spacing={4}
-          >
+          <Grid container alignItems="center" justify="center" spacing={4}>
             <Grid item>
-              <AvatarPlaceholder gender={data.gender} />
+              {/* TODO: Put custom width */}
+              <AvatarPlaceholder customWidth="" gender={data.gender} />
             </Grid>
             <Grid item>
               <Typography>Nombre: {data.name}</Typography>
@@ -307,11 +305,11 @@ function SearchPatient({
               ))}
           </TableBody>
         </Table>
-        {searchResult.length === 0 && (
-          <DialogContentText align="center">
-            Escribí algún filtro
-          </DialogContentText>
-        )}
+        <DialogContentText align="center">
+          {searchResult.length === 0 &&
+            ((input.current !== "" && "No hay resultados") ||
+              "Escribí algún filtro")}
+        </DialogContentText>
       </DialogContent>
     </Dialog>
   );

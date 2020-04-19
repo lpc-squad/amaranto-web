@@ -106,7 +106,7 @@ function Index({ patients = [] }) {
               Necesitas loguearte para acceder
             </button>
           )) || (
-            <button disabled={loading} onClick={() => logout()}>
+            <button disabled={loading} onClick={() => logout({})}>
               Andate
             </button>
           )}
