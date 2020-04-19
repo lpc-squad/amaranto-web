@@ -2,9 +2,14 @@ import { Grid } from "@material-ui/core";
 import CreatePatientComponent from "../../../components/patient/create";
 
 function CreatePatient() {
+  function handleSubmit(e: any) {
+    e.preventDefault();
+    console.log("DONE   ");
+  }
+
   return (
     <Grid container>
-      <CreatePatientComponent />
+      <CreatePatientComponent handleSubmit={handleSubmit} />
     </Grid>
   );
 }
