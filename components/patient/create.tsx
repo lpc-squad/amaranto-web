@@ -1,3 +1,5 @@
+import useSWR from "swr";
+import db from "../../src/api";
 import { useState } from "react";
 import PropTypes from "prop-types";
 import "date-fns";
@@ -31,14 +33,27 @@ const useStyles = makeStyles((theme) => ({
     // margin: theme.spacing(1),
     minWidth: 120,
   },
+  inputRowOfDate: {
+    alignSelf: "end",
+  },
 }));
 
+/**
+ * TODO: Reemplazar esto con GraphQL
+ * @param key El nombre de la colección
+ */
+async function fetchData(key) {
+  const data = db.get(key).value();
+  return data;
+}
+
 function CreatePatientComponent(props: any) {
+  const classes = useStyles();
+  const { data: coverageTemplate } = useSWR("coverageTemplate", fetchData);
   const [dataForm, setDataForm] = useState({
     birth_date: new Date(),
     gender: "",
   });
-  const classes = useStyles();
 
   function handleChange(e: React.ChangeEvent<{ value: any; name: string }>) {
     const { name, value } = e.target;
@@ -60,6 +75,7 @@ function CreatePatientComponent(props: any) {
       <Paper className={classes.paper}>
         <form onSubmit={props.handleSubmit}>
           <Grid container spacing={2}>
+            {/* PRIMERA FILA */}
             <Grid item sm={5}>
               <TextField
                 required
@@ -93,6 +109,8 @@ function CreatePatientComponent(props: any) {
                 </Select>
               </FormControl>
             </Grid>
+
+            {/* SEGUNDA FILA */}
             <Grid item md={2}>
               <KeyboardDatePicker
                 disableToolbar
@@ -107,7 +125,7 @@ function CreatePatientComponent(props: any) {
                 }}
               />
             </Grid>
-            <Grid item md={2}>
+            <Grid item md={2} className={classes.inputRowOfDate}>
               <TextField
                 id="phone"
                 name="phone"
@@ -115,7 +133,7 @@ function CreatePatientComponent(props: any) {
                 onChange={handleChange}
               />
             </Grid>
-            <Grid item md={4}>
+            <Grid item md={4} className={classes.inputRowOfDate}>
               <TextField
                 fullWidth
                 id="email"
@@ -124,7 +142,7 @@ function CreatePatientComponent(props: any) {
                 onChange={handleChange}
               />
             </Grid>
-            <Grid item md={4}>
+            <Grid item md={4} className={classes.inputRowOfDate}>
               <TextField
                 fullWidth
                 id="address"
@@ -133,24 +151,62 @@ function CreatePatientComponent(props: any) {
                 onChange={handleChange}
               />
             </Grid>
-            <Grid item md={4}>
+
+            {/* TERCERA FILA */}
+            <Grid item md={2}>
               <FormControl className={classes.formControl}>
-                <InputLabel id="coverage-list">Cobertura</InputLabel>
-                <Select
-                  id="coverage-list"
-                  name="coverage_name"
-                  onChange={handleChange}
-                >
-                  <MenuItem>OSDE</MenuItem>
-                  <MenuItem>OSBA</MenuItem>
-                  <MenuItem>IOMA</MenuItem>
+                <InputLabel id="coverage_name">Cobertura</InputLabel>
+                <Select id="coverage_name" name="coverage_name" defaultValue="">
+                  {(coverageTemplate || []).length > 0 &&
+                    coverageTemplate.map(({ coverage_name }, k) => (
+                      <MenuItem key={k} value={coverage_name}>
+                        {coverage_name}
+                      </MenuItem>
+                    ))}
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item md={8}>
+            <Grid item md={2}>
+              <FormControl className={classes.formControl}>
+                <InputLabel id="coverage_plan">Plan </InputLabel>
+                <Select id="coverage_plan" name="coverage_plan" defaultValue="">
+                  {(coverageTemplate || []).length > 0 &&
+                    coverageTemplate.map(({ plan }, k) => (
+                      <MenuItem key={k} value={plan}>
+                        {plan}
+                      </MenuItem>
+                    ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item md={2}>
               <TextField
+                fullWidth
                 name="coverage_num"
-                placeholder="Número de credencial"
+                placeholder="Sin espacios"
+                label="Número de credencial"
+              />
+            </Grid>
+            <Grid item md={3}>
+              <FormControl className={classes.formControl}>
+                <InputLabel id="identification_type">Tipo</InputLabel>
+                <Select
+                  fullWidth
+                  defaultValue=""
+                  id="identification_type"
+                  name="identification_type"
+                >
+                  <MenuItem value="DNI">DNI</MenuItem>
+                  <MenuItem value="CI">Cédula de identidad</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item md={3}>
+              <TextField
+                fullWidth
+                label="Número de documento"
+                name="identification_number"
+                placeholder="Sin puntos ni espacios"
               />
             </Grid>
             <Grid item>
