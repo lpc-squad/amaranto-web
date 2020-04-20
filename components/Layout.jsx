@@ -11,7 +11,9 @@ import {
   Container,
   Drawer,
   Divider,
+  Fade,
   IconButton,
+  LinearProgress,
   List,
   ListItem,
   ListItemText,
@@ -125,6 +127,7 @@ function Layout(props) {
   const theme = useTheme();
   const router = useRouter();
   const classes = useStyles();
+  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [isRoot, setIsRoot] = useState(true);
 
@@ -134,9 +137,14 @@ function Layout(props) {
 
   useEffect(() => {
     Router.events.on("routeChangeStart", checkNonDashboardPages);
+    Router.events.on("routeChangeStart", () => setLoading(true));
+    Router.events.on("routeChangeComplete", () => setLoading(false));
+    Router.events.on("routeChangeError", () => setLoading(false));
     checkNonDashboardPages();
     return () => {
       Router.events.off("routeChangeStart");
+      Router.events.off("routeChangeComplete");
+      Router.events.off("routeChangeError");
     };
   }, [router, isRoot]);
 
@@ -154,6 +162,17 @@ function Layout(props) {
   } else {
     return (
       <div style={{ display: "flex" }}>
+        <Fade
+          in={loading}
+          style={{
+            zIndex: 9999,
+            transitionDelay: loading ? "800ms" : "0ms",
+          }}
+        >
+          <LinearProgress
+            style={{ zIndex: 9999, position: "absolute", top: 0 }}
+          />
+        </Fade>
         <AppBar
           position="fixed"
           className={clsx(classes.appBar, {

@@ -6,7 +6,6 @@ import {
   Card,
   CardContent,
   Grid,
-  Snackbar,
   TextField,
   Typography,
   Paper,
@@ -27,13 +26,13 @@ import {
   TableRow,
 } from "@material-ui/core";
 
-import { Alert } from "@material-ui/lab";
-
 import db from "../../../src/api";
 
+import { ISnackbar } from "../../../src/types";
+import Snackbar from "../../../components/Snackbar";
 import AvatarPlaceholder from "../../../components/AvatarPlaceholder";
 
-function CreateRegister(props) {
+function CreateRegister() {
   let timeout = null; // Debounce
   const inputContainer = useRef(""); // Debounce
 
@@ -42,7 +41,8 @@ function CreateRegister(props) {
   const [indications, setIndications] = useState("");
   const [observations, setObservations] = useState("");
   const [searchResult, setSearchResult] = useState([]);
-  const [snackbar, setSnackbar] = useState({
+  const [snackbar, setSnackbar] = useState<ISnackbar>({
+    title: "",
     open: false,
     message: "",
     severity: "success",
@@ -95,19 +95,16 @@ function CreateRegister(props) {
       const collection = db.get("records");
 
       if (!patient) {
-        setSnackbar({
+        setSnackbar((prevState) => ({
+          ...prevState,
           open: true,
           severity: "error",
           message: "Seleccioná al paciente",
-        });
+        }));
       }
 
       if (!patient || !indications || !observations) {
-        setSnackbar({
-          open: true,
-          severity: "error",
-          message: "Por favor, llená los campos necesarios",
-        });
+        toggleSnackbar("Por favor, llená los campos necesarios", "error");
         return;
       }
 
@@ -122,24 +119,17 @@ function CreateRegister(props) {
         })
         .write();
 
-      setSnackbar({
-        open: true,
-        severity: "success",
-        message: "El registro fue guardado exitosamente",
-      });
+      toggleSnackbar("El registro fue guardado exitosamente", "success");
     } catch (error) {
-      setSnackbar({
-        open: true,
-        severity: "error",
-        message: "No se pudo guardar el registro",
-      });
+      toggleSnackbar("No se pudo guardar el registro", "error");
     }
   }
 
   function toggleSnackbar(message: string = "", severity: any = "info") {
-    setSnackbar((e) => ({
-      open: !e.open,
-      severity: severity || e.severity,
+    setSnackbar((prevState) => ({
+      ...prevState,
+      open: !prevState.open,
+      severity: severity || prevState.severity,
       message,
     }));
   }
@@ -165,6 +155,17 @@ function CreateRegister(props) {
                           id="observations"
                           variant="outlined"
                           label="🩺Motivo de consulta, observaciones"
+                          onChange={(e) => setObservations(e.target.value)}
+                        />
+                      </Grid>
+                      <Grid item>
+                        <TextField
+                          fullWidth
+                          multiline
+                          rows={3}
+                          id="diagnosis"
+                          variant="outlined"
+                          label="Diagnóstico"
                           onChange={(e) => setObservations(e.target.value)}
                         />
                       </Grid>
@@ -200,17 +201,7 @@ function CreateRegister(props) {
           </Grid>
         </Grid>
       </form>
-      {/* TODO: Definir Color en la func */}
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={6000}
-        onClose={() => toggleSnackbar()}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      >
-        <Alert onClose={() => toggleSnackbar()} severity={snackbar.severity}>
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
+      <Snackbar open={snackbar.open}>{snackbar.message}</Snackbar>
       <SearchPatient
         open={modal}
         onClose={toggleModal}
