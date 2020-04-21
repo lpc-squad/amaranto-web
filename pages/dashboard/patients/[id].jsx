@@ -53,13 +53,7 @@ function Patient({ patient }) {
         <Grid item style={{ alignSelf: "center" }}>
           <Table
             ariaTable="patients table"
-            head={
-              <TableRow>
-                <TableCell>Fecha</TableCell>
-                <TableCell>Observaciones</TableCell>
-                <TableCell>Prescripción</TableCell>
-              </TableRow>
-            }
+            head={["Fecha", "Observaciones", "Prescripción"]}
             content={
               (records.length > 0 &&
                 records.map((i, k) => <RecordRow key={k} record={i} />)) || (

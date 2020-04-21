@@ -1,5 +1,7 @@
+import useSWR from "swr";
 import Link from "next/link";
 import querystring from "querystring";
+import { request } from "graphql-request";
 import { useEffect, useState } from "react";
 import {
   Badge,
@@ -12,18 +14,31 @@ import {
 import { useAuth } from "use-auth0-hooks";
 import { Alert, AlertTitle } from "@material-ui/lab";
 
-import Loading from "../../components/Loading";
 import Table from "../../components/Table";
-import db from "../../src/api";
 
-function Index({ patients = [] }) {
+function Index() {
+  const { data: patients, error: dataError, isValidating } = useSWR(
+    `{
+    patients {
+      _id
+      user {
+        first_name
+        last_name
+      }
+    }
+  }`,
+    (query) => request(`${process.env.BACKEND_URL}/graphql`, query),
+    {
+      initialData: [],
+    }
+  );
   const {
     isLoading,
     login,
     logout,
     isAuthenticated,
-    accessToken,
-    error,
+    // accessToken,
+    // error,
     user,
   } = useAuth({
     audience: "http://clinicalrecord.com.ar/api",
@@ -47,6 +62,7 @@ function Index({ patients = [] }) {
   }
 
   useEffect(() => {
+    console.log(process.env.BACKEND_URL);
     if (!isAuthenticated && user === undefined) {
       login({ appState: getReturnTo() });
     } else if (!isLoading || isAuthenticated) setLoading(false);
@@ -60,7 +76,6 @@ function Index({ patients = [] }) {
 
   return (
     <>
-      <Loading loading={loading} />
       <Grid container direction="column" spacing={6}>
         <Alert severity="info">
           <AlertTitle>
@@ -147,16 +162,11 @@ function Index({ patients = [] }) {
         <Grid item>
           <Table
             ariaTable="patients table"
-            head={
-              <TableRow>
-                <TableCell>Nombre</TableCell>
-                <TableCell>Apellido</TableCell>
-                <TableCell>Acciones</TableCell>
-              </TableRow>
-            }
+            loading={isValidating}
+            head={["Nombre", "Apellido", "Acciones"]}
             content={
               patients.length > 0 &&
-              patients.map((i, k) => <PatientRow key={k} patient={i} /> || [])
+              patients.map((i, k) => <PatientRow key={k} patient={i} />)
             }
           />
         </Grid>
@@ -167,8 +177,8 @@ function Index({ patients = [] }) {
 
 const PatientRow = ({ patient }) => (
   <TableRow>
-    <TableCell>{patient.first_name}</TableCell>
-    <TableCell>{patient.last_name}</TableCell>
+    <TableCell>{patient.user.first_name}</TableCell>
+    <TableCell>{patient.user.last_name}</TableCell>
     <TableCell>
       <Link
         href="/dashboard/patients/[id]"
@@ -182,24 +192,4 @@ const PatientRow = ({ patient }) => (
   </TableRow>
 );
 
-Index.getInitialProps = (ctx) => {
-  const patients = db.get("patients").cloneDeep().value();
-  const users = db
-    .get("users")
-    .reduce((acc, user) => {
-      const patient = patients.find((p) => p.user_id === user._id);
-      if (!patient) {
-        return acc;
-      } else {
-        return [...acc, { ...user, ...patient }];
-      }
-    }, [])
-    .value();
-
-  return {
-    patients: users,
-  };
-};
-
-// export default withLoginRequired(Index);
 export default Index;
