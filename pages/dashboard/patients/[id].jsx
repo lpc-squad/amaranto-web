@@ -14,7 +14,7 @@ function Patient({ patient }) {
   useEffect(() => {
     let _records = db
       .get("records")
-      .filter(p => p._patientId === patient._id)
+      .filter((r) => r.patient_id === patient._id)
       .value();
 
     if (!Array.isArray(_records) && !!_records) {
@@ -53,13 +53,7 @@ function Patient({ patient }) {
         <Grid item style={{ alignSelf: "center" }}>
           <Table
             ariaTable="patients table"
-            head={
-              <TableRow>
-                <TableCell>Fecha</TableCell>
-                <TableCell>Observaciones</TableCell>
-                <TableCell>Prescripción</TableCell>
-              </TableRow>
-            }
+            head={["Fecha", "Observaciones", "Prescripción"]}
             content={
               (records.length > 0 &&
                 records.map((i, k) => <RecordRow key={k} record={i} />)) || (
@@ -95,23 +89,22 @@ const RecordRow = ({ record }) => {
   );
 };
 
-Patient.getInitialProps = async ctx => {
+Patient.getInitialProps = async (ctx) => {
   const { differenceInYears } = await import("date-fns");
   const { id } = ctx.query;
 
-  let patient = db
-    .get("patients")
-    .find({ _id: id })
-    .value();
+  let patient = db.get("patients").find({ _id: id }).value();
+  let user = db.get("users").find({ _id: patient.user_id }).value();
+  const ourPatient = { ...user, ...patient };
 
   // Server Side calculation, Is this OK?
-  patient.age = differenceInYears(
+  ourPatient.age = differenceInYears(
     new Date(),
-    new Date(format(patient.birthDate, "yyyy-MM-dd"))
+    new Date(format(new Date(ourPatient.birth_date), "yyyy-MM-dd"))
   );
 
   return {
-    patient
+    patient: ourPatient,
   };
 };
 

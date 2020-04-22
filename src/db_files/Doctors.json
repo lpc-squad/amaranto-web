@@ -1,0 +1,6 @@
+[
+{ "_id" : "5e8cfc9104a01507999aa32d", "medical_license_plate" : "SomeLicenseNDEAH", "speciality_description" : "Inspector de anos", "institute_id" : "5e8cf03ed841d352cdc1e08f", "user_id" : "5e8cf6e94989de844b6d0bd5", "registered_date" : { "$date" : "2019-01-01T03:00:00.000+0000" } },
+{ "_id" : "5e8cfd1abed29847e6d3034c", "medical_license_plate" : "AnotherLicenseNDEAH", "speciality_description" : "Inspector de anos", "institute_id" : "5e8cf03e8d726363de3c2e8a", "user_id" : "5e8cf6e9974495538bdf9366", "registered_date" : { "$date" : "2019-01-01T03:00:00.000+0000" } },
+{ "_id" : "5e8cfd689d1b01d668b71952", "medical_license_plate" : "AnotherLicenseNDEAH", "speciality_description" : "Inspector de anos", "institute_id" : "5e8cf03e051a18b4676ea0c7", "user_id" : "5e8cf6e99d7376521c6bb3c8", "registered_date" : { "$date" : "2019-01-01T03:00:00.000+0000" } },
+{ "_id" : "5e8cfda5bf7adf7766f6074e", "medical_license_plate" : "AnotherLicenseNDEAH", "speciality_description" : "Inspector de anos", "institute_id" : "5e8cf03e523c0eb9eb2cfd1d", "user_id" : "5e8cf6e9dc3688f418e3236c", "registered_date" : { "$date" : "2019-01-01T03:00:00.000+0000" } }
+]

@@ -1,12 +1,19 @@
 import React from "react";
 import App from "next/app";
 import Head from "next/head";
+import Router from "next/router";
 import { Auth0Provider } from "use-auth0-hooks";
 import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
 import Layout from "../components/Layout";
 import theme from "../src/theme";
+
+function onRedirectCallback(appState) {
+  if (appState && appState.returnTo) {
+    Router.push("/dashboard");
+  }
+}
 
 export default class MyApp extends App {
   componentDidMount() {
@@ -35,7 +42,13 @@ export default class MyApp extends App {
           <Layout>
             <Auth0Provider
               domain={"clinical-record.auth0.com"}
-              redirectUri={"http://localhost:3000/"}
+              // TODO: Cuidado con esto, como hacemos?
+              redirectUri={
+                (process.env.NODE_ENV !== "production" &&
+                  "http://localhost:3000/dashboard") ||
+                process.env.AUTH0_REDIRECT_URI
+              }
+              onRedirectCallback={onRedirectCallback}
               clientId={"fMa0FV92OSzAd9dq8bH3PgH3SHnZJJ3W"}
             >
               <Component {...pageProps} />
