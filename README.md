@@ -24,11 +24,4 @@ npx concurrently 'cd clinical-backend && npm run dev' 'cd clinical-web && npm ru
 #!/bin/bash
 
 npx concurrently "cd clinical-backend && npm run dev" "cd clinical-web && npm run dev"```
-
-## Project Structure
-
-```
-├── pages
-|    └──  index              # Landing ahre
-└──
 ```
