@@ -1,5 +1,4 @@
-import { Grid, CircularProgress } from "@material-ui/core";
-import PropTypes from "prop-types";
+import { CircularProgress, Grid } from "@material-ui/core";
 
 function LoadingComponent({ loading }) {
   return (
@@ -26,9 +25,5 @@ function LoadingComponent({ loading }) {
     </Grid>
   );
 }
-
-LoadingComponent.propTypes = {
-  loading: PropTypes.bool.isRequired,
-};
 
 export default LoadingComponent;

@@ -1,10 +1,9 @@
-import { useState } from "react";
-import { useRouter } from "next/router";
 import { Grid } from "@material-ui/core";
-
-import { ISnackbar } from "../../../src/types";
-import Snackbar from "../../../components/Snackbar";
+import { useRouter } from "next/router";
+import { useState } from "react";
 import CreatePatientComponent from "../../../components/patient/create";
+import Snackbar from "../../../components/Snackbar";
+import { ISnackbar } from "../../../lib/types";
 
 function CreatePatient() {
   const router = useRouter();

@@ -1,14 +1,13 @@
-import { arrayOf, oneOfType, string, object, bool } from "prop-types";
 import {
   Backdrop,
   CircularProgress,
   Paper,
   Table,
   TableBody,
+  TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  TableCell,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -47,12 +46,5 @@ function TableComponent(props) {
     </TableContainer>
   );
 }
-
-TableComponent.propTypes = {
-  ariaTable: string,
-  head: arrayOf(string).isRequired,
-  loading: bool,
-  content: oneOfType([arrayOf(object), object, undefined]),
-};
 
 export default TableComponent;

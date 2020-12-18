@@ -1,36 +1,32 @@
-import { useRef, useState } from "react";
-import shortId from "shortid";
-import Link from "next/link";
 import {
   Button,
   Card,
-  CardContent,
-  Grid,
-  TextField,
-  Typography,
-  Paper,
-} from "@material-ui/core";
-
-import {
-  Dialog,
+  CardContent, Dialog,
   DialogContent,
   DialogContentText,
-  DialogTitle,
-} from "@material-ui/core";
+  DialogTitle, Grid,
 
-import {
-  Table,
-  TableHead,
+
+  Paper, Table,
+
   TableBody,
-  TableCell,
-  TableRow,
+  TableCell, TableHead,
+
+
+  TableRow, TextField,
+  Typography
 } from "@material-ui/core";
-
-import db from "../../../src/api";
-
-import { ISnackbar } from "../../../src/types";
-import Snackbar from "../../../components/Snackbar";
+import Link from "next/link";
+import { useRef, useState } from "react";
+import shortId from "shortid";
 import AvatarPlaceholder from "../../../components/AvatarPlaceholder";
+import Snackbar from "../../../components/Snackbar";
+import db from "../../../lib/api";
+import { ISnackbar } from "../../../lib/types";
+
+
+
+
 
 function CreateRegister() {
   let timeout = null; // Debounce
