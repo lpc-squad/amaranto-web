@@ -187,19 +187,21 @@ function Index() {
           </section>
         </Container>
       </main>
-      <style jsx global>{`
-        @keyframes arrow {
-          0% {
-            transform: translateY(0);
+      <style jsx global>
+        {`
+          @keyframes arrow {
+            0% {
+              transform: translateY(0);
+            }
+            50% {
+              transform: translateY(50%);
+            }
+            100% {
+              transform: translateY(0);
+            }
           }
-          50% {
-            transform: translateY(50%);
-          }
-          100% {
-            transform: translateY(0);
-          }
-        }
-      `}</style>
+        `}
+      </style>
     </>
   );
 }

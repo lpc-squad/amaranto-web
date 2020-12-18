@@ -1,8 +1,3 @@
-import useSWR from "swr";
-import Link from "next/link";
-import querystring from "querystring";
-import { request } from "graphql-request";
-import { useEffect, useState } from "react";
 import {
   Badge,
   Button,
@@ -11,13 +6,17 @@ import {
   TableRow,
   Typography,
 } from "@material-ui/core";
-import { useAuth } from "use-auth0-hooks";
 import { Alert, AlertTitle } from "@material-ui/lab";
-
+import { request } from "graphql-request";
+import Link from "next/link";
+import querystring from "querystring";
+import { useEffect, useState } from "react";
+import useSWR from "swr";
+import { useAuth } from "use-auth0-hooks";
 import Table from "../../components/Table";
 
 function Index() {
-  const { data: patients, error: dataError, isValidating } = useSWR(
+  const { data: patients, isValidating } = useSWR(
     `{
     patients {
       _id
@@ -72,7 +71,7 @@ function Index() {
     //   .then(res => res.json())
     //   .then(res => console.log(res))
     //   .catch(err => console.error(err));
-  }, [isLoading, isAuthenticated, user]);
+  }, [isLoading, isAuthenticated, user, login]);
 
   return (
     <>
@@ -83,11 +82,16 @@ function Index() {
             <a
               href="mailto:facundomgordillo@gmail.com?Subject=Clinical%20Record"
               target="_blank"
+              rel="noreferrer"
             >
               Email
             </a>{" "}
             o{" "}
-            <a href="https://twitter.com/FMGordillo" target="_blank">
+            <a
+              href="https://twitter.com/FMGordillo"
+              target="_blank"
+              rel="noreferrer"
+            >
               Twitter
             </a>
           </AlertTitle>
@@ -96,7 +100,7 @@ function Index() {
         </Alert>
         <Grid item>
           <Badge
-            badgeContent={"BETA"}
+            badgeContent="BETA"
             color="secondary"
             anchorOrigin={{
               vertical: "bottom",
@@ -109,6 +113,7 @@ function Index() {
         <Grid item>
           {(!isAuthenticated && (
             <button
+              type="button"
               disabled={loading}
               onClick={() =>
                 login({
@@ -121,7 +126,7 @@ function Index() {
               Necesitas loguearte para acceder
             </button>
           )) || (
-            <button disabled={loading} onClick={() => logout({})}>
+            <button type="button" disabled={loading} onClick={() => logout({})}>
               Andate
             </button>
           )}
@@ -165,8 +170,9 @@ function Index() {
             loading={isValidating}
             head={["Nombre", "Apellido", "Acciones"]}
             content={
+              patients &&
               patients.length > 0 &&
-              patients.map((i, k) => <PatientRow key={k} patient={i} />)
+              patients.map((i) => <PatientRow key={i} patient={i} />)
             }
           />
         </Grid>
@@ -175,7 +181,7 @@ function Index() {
   );
 }
 
-const PatientRow = ({ patient }) => (
+const PatientRow = ({ patient }: { patient: any }) => (
   <TableRow>
     <TableCell>{patient.user.first_name}</TableCell>
     <TableCell>{patient.user.last_name}</TableCell>

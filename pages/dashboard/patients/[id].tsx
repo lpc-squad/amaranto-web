@@ -12,13 +12,17 @@ import AvatarPlaceholder from "../../../components/AvatarPlaceholder";
 import Table from "../../../components/Table";
 import db from "../../../lib/api";
 
-const Patient: FunctionComponent = ({ patient }) => {
+interface PatientProps {
+  patient: any;
+}
+
+const Patient: FunctionComponent<PatientProps> = ({ patient }) => {
   const [records, setRecords] = useState([]);
 
   useEffect(() => {
     let _records = db
       .get("records")
-      .filter((r) => r.patient_id === patient._id)
+      .filter((r: any) => r.patient_id === patient._id)
       .value();
 
     if (!Array.isArray(_records) && !!_records) {
@@ -60,7 +64,7 @@ const Patient: FunctionComponent = ({ patient }) => {
             head={["Fecha", "Observaciones", "Prescripción"]}
             content={
               (records.length > 0 &&
-                records.map((i, k) => <RecordRow key={k} record={i} />)) || (
+                records.map((i) => <RecordRow key={i} record={i} />)) || (
                 <TableRow>
                   <TableCell>N/A</TableCell>
                   <TableCell>N/A</TableCell>
@@ -77,7 +81,11 @@ const Patient: FunctionComponent = ({ patient }) => {
   return <p>No encontramos a ese paciente</p>;
 };
 
-const RecordRow: FunctionComponent = ({ record }) => {
+interface RecordRowProps {
+  record: any;
+}
+
+const RecordRow: FunctionComponent<RecordRowProps> = ({ record }) => {
   let date;
   try {
     date = format(new Date(), "yyyy-mm-dd");
@@ -93,12 +101,13 @@ const RecordRow: FunctionComponent = ({ record }) => {
   );
 };
 
+// @ts-ignore
 Patient.getInitialProps = async (ctx) => {
   const { differenceInYears } = await import("date-fns");
   const { id } = ctx.query;
 
-  let patient = db.get("patients").find({ _id: id }).value();
-  let user = db.get("users").find({ _id: patient.user_id }).value();
+  const patient = db.get("patients").find({ _id: id }).value();
+  const user = db.get("users").find({ _id: patient.user_id }).value();
   const ourPatient = { ...user, ...patient };
 
   // Server Side calculation, Is this OK?

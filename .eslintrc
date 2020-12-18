@@ -40,6 +40,8 @@
     "camelcase": "off",
     "no-underscore-dangle": "off",
     // ???
-    "react/display-name": 1
+    "react/display-name": 1,
+    "react/jsx-props-no-spreading": "warn",
+    "react/jsx-curly-newline": "off"
   }
 }

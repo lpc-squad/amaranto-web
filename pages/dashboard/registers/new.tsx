@@ -288,8 +288,8 @@ const SearchPatient: FunctionComponent<SearchPatientProps> = ({
         </TableHead>
         <TableBody>
           {searchResult.length > 0 &&
-            searchResult.map((i, k) => (
-              <TableRow key={k}>
+            searchResult.map((i) => (
+              <TableRow key={i._id}>
                 <TableCell>{i.name}</TableCell>
                 <TableCell>{i.surname}</TableCell>
                 <TableCell>{i.documentId}</TableCell>

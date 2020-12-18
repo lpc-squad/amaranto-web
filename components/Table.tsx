@@ -12,7 +12,7 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import { FunctionComponent, ReactNode } from "react";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   backdrop: {
     heigth: 60,
     background: "none",
@@ -30,7 +30,7 @@ interface TableComponentProps {
 const TableComponent: FunctionComponent<TableComponentProps> = ({
   ariaTable = "patients table",
   head,
-  loading,
+  loading = false,
   content,
 }) => {
   const classes = useStyles();
@@ -40,8 +40,8 @@ const TableComponent: FunctionComponent<TableComponentProps> = ({
       <Table aria-label={ariaTable}>
         <TableHead>
           <TableRow>
-            {head.map((h, k) => (
-              <TableCell key={k}>{h}</TableCell>
+            {head.map((h) => (
+              <TableCell key={h.toString()}>{h}</TableCell>
             ))}
           </TableRow>
         </TableHead>
