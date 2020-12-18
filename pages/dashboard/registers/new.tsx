@@ -1,35 +1,31 @@
 import {
   Button,
   Card,
-  CardContent, Dialog,
+  CardContent,
+  Dialog,
   DialogContent,
   DialogContentText,
-  DialogTitle, Grid,
-
-
-  Paper, Table,
-
+  DialogTitle,
+  Grid,
+  Paper,
+  Table,
   TableBody,
-  TableCell, TableHead,
-
-
-  TableRow, TextField,
-  Typography
+  TableCell,
+  TableHead,
+  TableRow,
+  TextField,
+  Typography,
 } from "@material-ui/core";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { FunctionComponent, useRef, useState } from "react";
 import shortId from "shortid";
 import AvatarPlaceholder from "../../../components/AvatarPlaceholder";
 import Snackbar from "../../../components/Snackbar";
 import db from "../../../lib/api";
 import { ISnackbar } from "../../../lib/types";
 
-
-
-
-
 function CreateRegister() {
-  let timeout = null; // Debounce
+  let timeout: NodeJS.Timeout | undefined = undefined; // Debounce
   const inputContainer = useRef(""); // Debounce
 
   const [modal, setModal] = useState(false);
@@ -48,6 +44,7 @@ function CreateRegister() {
    * Debounce search
    */
   function handleChange() {
+    // @ts-ignore
     clearTimeout(timeout);
     timeout = setTimeout(() => {
       // TODO: No será demasiado?
@@ -108,7 +105,7 @@ function CreateRegister() {
         .push({
           _id: shortId.generate(),
           _doctorId: 1, // FIXME hardCoded
-          _patientId: patient._id,
+          _patientId: patient?._id,
           indications,
           observations,
           date: new Date(),
@@ -121,7 +118,7 @@ function CreateRegister() {
     }
   }
 
-  function toggleSnackbar(message: string = "", severity: any = "info") {
+  function toggleSnackbar(message = "", severity = "info") {
     setSnackbar((prevState) => ({
       ...prevState,
       open: !prevState.open,
@@ -210,7 +207,10 @@ function CreateRegister() {
   );
 }
 
-function Patient({ data, toggleModal }) {
+const Patient: FunctionComponent<{ data: any; toggleModal: () => void }> = ({
+  data,
+  toggleModal,
+}) => {
   if (data) {
     return (
       <Card>
@@ -218,7 +218,7 @@ function Patient({ data, toggleModal }) {
           <Grid container alignItems="center" justify="center" spacing={4}>
             <Grid item>
               {/* TODO: Put custom width */}
-              <AvatarPlaceholder customWidth="" gender={data.gender} />
+              <AvatarPlaceholder dimension="" gender={data.gender} />
             </Grid>
             <Grid item>
               <Typography>Nombre: {data.name}</Typography>
@@ -245,7 +245,7 @@ function Patient({ data, toggleModal }) {
       </Card>
     );
   }
-}
+};
 
 function SearchPatient({
   open,

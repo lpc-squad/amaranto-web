@@ -1,13 +1,22 @@
 import { Avatar } from "@material-ui/core";
+import { FunctionComponent } from "react";
 
-const imgWidth = 180;
+type Gender = "F" | "M";
 
-function AvatarPlaceholder({ customWidth, gender }) {
+interface AvatarPlaceholderProps {
+  dimension?: number;
+  gender?: Gender;
+}
+
+const AvatarPlaceholder: FunctionComponent<AvatarPlaceholderProps> = ({
+  dimension = 180,
+  gender,
+}) => {
   return (
     <Avatar
       style={{
-        width: customWidth || imgWidth,
-        height: customWidth || imgWidth,
+        width: dimension,
+        height: dimension,
       }}
       src={
         (gender === "F" &&
@@ -16,6 +25,6 @@ function AvatarPlaceholder({ customWidth, gender }) {
       }
     />
   );
-}
+};
 
 export default AvatarPlaceholder;
