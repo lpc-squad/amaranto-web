@@ -1,12 +1,16 @@
+import {
+  Card,
+  CardContent,
+  Grid,
+  TableCell,
+  TableRow,
+  Typography,
+} from "@material-ui/core";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
-import { TableCell, TableRow } from "@material-ui/core";
-import { Card, CardContent, Grid, Typography } from "@material-ui/core";
-
-import Table from "../../../components/Table";
 import AvatarPlaceholder from "../../../components/AvatarPlaceholder";
-
-import db from "../../../src/api";
+import Table from "../../../components/Table";
+import db from "../../../lib/api";
 
 function Patient({ patient }) {
   const [records, setRecords] = useState([]);

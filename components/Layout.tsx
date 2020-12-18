@@ -1,7 +1,3 @@
-import clsx from "clsx";
-import Link from "next/link";
-import { useState, useEffect } from "react";
-import Router, { useRouter } from "next/router";
 import {
   AppBar,
   Avatar,
@@ -9,25 +5,28 @@ import {
   // https://material-ui.com/components/breadcrumbs/
   // Breadcrumbs,
   Container,
-  Drawer,
   Divider,
+  Drawer,
   Fade,
   IconButton,
   LinearProgress,
   List,
   ListItem,
-  ListItemText,
   ListItemIcon,
+  ListItemText,
   Toolbar,
   Typography,
 } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-
-import HomeIcon from "@material-ui/icons/Home";
-import MenuIcon from "@material-ui/icons/Menu";
-import PatientsIcon from "@material-ui/icons/Group";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import PatientsIcon from "@material-ui/icons/Group";
+import HomeIcon from "@material-ui/icons/Home";
+import MenuIcon from "@material-ui/icons/Menu";
+import clsx from "clsx";
+import Link from "next/link";
+import Router, { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
 const drawerWidth = 240;
 
@@ -142,9 +141,9 @@ function Layout(props) {
     Router.events.on("routeChangeError", () => setLoading(false));
     checkNonDashboardPages();
     return () => {
-      Router.events.off("routeChangeStart");
-      Router.events.off("routeChangeComplete");
-      Router.events.off("routeChangeError");
+      Router.events.off("routeChangeStart", checkNonDashboardPages);
+      Router.events.off("routeChangeComplete", () => {});
+      Router.events.off("routeChangeError", () => {});
     };
   }, [router, isRoot]);
 
@@ -227,7 +226,7 @@ function Layout(props) {
             </IconButton>
           </div>
           <Divider />
-          <List className={classes.list}>
+          <List>
             <Link href="/">
               <ListItem button component="a">
                 <ListItemIcon>

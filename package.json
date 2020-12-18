@@ -12,7 +12,10 @@
     "analyze:browser": "cross-env BUNDLE_ANALYZE=browser next build"
   },
   "keywords": [],
-  "author": "",
+  "author": {
+    "name": "Facundo Martin Gordillo",
+    "email": "facundomgordillo@gmail.com"
+  },
   "license": "ISC",
   "dependencies": {
     "@auth0/auth0-spa-js": "^1.6.5",
@@ -21,8 +24,6 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.47",
     "@material-ui/pickers": "^3.2.10",
-    "@types/node": "^13.13.0",
-    "@types/react": "^16.9.34",
     "axios": "^0.19.2",
     "clsx": "^1.1.0",
     "date-fns": "^2.12.0",
@@ -36,12 +37,14 @@
     "shortid": "^2.2.15",
     "styled-components": "^5.0.0",
     "swr": "^0.2.0",
-    "typescript": "^3.8.3",
     "use-auth0-hooks": "^0.7.0",
     "yup": "^0.28.1"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^9.3.3",
-    "cross-env": "^7.0.2"
+    "@types/node": "^13.13.0",
+    "@types/react": "^16.9.34",
+    "cross-env": "^7.0.2",
+    "typescript": "^3.8.3"
   }
 }
