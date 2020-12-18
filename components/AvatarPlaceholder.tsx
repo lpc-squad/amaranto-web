@@ -7,7 +7,7 @@ function AvatarPlaceholder({ customWidth, gender }) {
     <Avatar
       style={{
         width: customWidth || imgWidth,
-        height: customWidth || imgWidth
+        height: customWidth || imgWidth,
       }}
       src={
         (gender === "F" &&
