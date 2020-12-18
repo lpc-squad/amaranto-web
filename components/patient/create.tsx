@@ -16,7 +16,6 @@ import {
   MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
 import "date-fns";
-import PropTypes from "prop-types";
 import { useState } from "react";
 import useSWR from "swr";
 import db from "../../lib/api";
@@ -224,9 +223,5 @@ function CreatePatientComponent(props: any) {
     </MuiPickersUtilsProvider>
   );
 }
-
-CreatePatientComponent.propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
-};
 
 export default CreatePatientComponent;

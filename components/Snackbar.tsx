@@ -1,6 +1,5 @@
-import { Alert, AlertTitle } from "@material-ui/lab";
 import { Snackbar } from "@material-ui/core";
-import { string, bool, any } from "prop-types";
+import { Alert, AlertTitle } from "@material-ui/lab";
 
 function SnackbarComponent(props) {
   return (
@@ -17,12 +16,5 @@ function SnackbarComponent(props) {
     </Snackbar>
   );
 }
-
-SnackbarComponent.propTypes = {
-  open: bool,
-  title: any,
-  severity: any, // TODO: Must controlate
-  children: string.isRequired,
-};
 
 export default SnackbarComponent;
