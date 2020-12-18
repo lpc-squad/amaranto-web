@@ -1,11 +1,11 @@
 import { Grid } from "@material-ui/core";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { FunctionComponent, useState } from "react";
 import CreatePatientComponent from "../../../components/patient/create";
 import Snackbar from "../../../components/Snackbar";
 import { ISnackbar } from "../../../lib/types";
 
-function CreatePatient() {
+const CreatePatient: FunctionComponent = () => {
   const router = useRouter();
   const [snackbar, setSnackbar] = useState<ISnackbar>({
     title: "",
@@ -34,6 +34,6 @@ function CreatePatient() {
       </Snackbar>
     </Grid>
   );
-}
+};
 
 export default CreatePatient;

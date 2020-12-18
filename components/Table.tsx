@@ -10,6 +10,7 @@ import {
   TableRow,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import { FunctionComponent, ReactNode } from "react";
 
 const useStyles = makeStyles((theme) => ({
   backdrop: {
@@ -19,23 +20,36 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function TableComponent(props) {
+interface TableComponentProps {
+  ariaTable?: string;
+  head: ReactNode[];
+  content?: ReactNode;
+  loading?: boolean;
+}
+
+const TableComponent: FunctionComponent<TableComponentProps> = ({
+  ariaTable = "patients table",
+  head,
+  loading,
+  content,
+}) => {
   const classes = useStyles();
+
   return (
     <TableContainer component={Paper}>
-      <Table aria-label={props.ariaTable || "patients table"}>
+      <Table aria-label={ariaTable}>
         <TableHead>
           <TableRow>
-            {props.head.map((h, k) => (
+            {head.map((h, k) => (
               <TableCell key={k}>{h}</TableCell>
             ))}
           </TableRow>
         </TableHead>
         <TableBody>
-          {props.content || (
+          {content || (
             <TableRow>
-              <TableCell colSpan={props.head.length}>
-                <Backdrop open={props.loading} className={classes.backdrop}>
+              <TableCell colSpan={head.length}>
+                <Backdrop open={loading} className={classes.backdrop}>
                   <CircularProgress color="inherit" />
                 </Backdrop>
               </TableCell>
@@ -45,6 +59,6 @@ function TableComponent(props) {
       </Table>
     </TableContainer>
   );
-}
+};
 
 export default TableComponent;

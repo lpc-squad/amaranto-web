@@ -16,7 +16,7 @@ import {
   MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
 import "date-fns";
-import { useState } from "react";
+import { ChangeEvent, FunctionComponent, useState } from "react";
 import useSWR from "swr";
 import db from "../../lib/api";
 
@@ -46,7 +46,13 @@ async function fetchData(key) {
   return data;
 }
 
-function CreatePatientComponent(props: any) {
+interface CreatePatientComponentProps {
+  handleSubmit?: () => void;
+}
+
+const CreatePatientComponent: FunctionComponent<CreatePatientComponentProps> = ({
+  handleSubmit,
+}) => {
   const classes = useStyles();
   const { data: coverageTemplate } = useSWR("coverageTemplate", fetchData);
   const [dataForm, setDataForm] = useState({
@@ -54,17 +60,20 @@ function CreatePatientComponent(props: any) {
     gender: "",
   });
 
-  function handleChange(e: React.ChangeEvent<{ value: any; name: string }>) {
+  const handleChange = (e: ChangeEvent<{ value: any; name: string }>) => {
     const { name, value } = e.target;
-    setDataForm((dataForm) => ({
-      ...dataForm,
+    setDataForm((previousState) => ({
+      ...previousState,
       [name]: value,
     }));
-  }
+  };
 
-  function handleDateChange(date: Date | null) {
-    setDataForm((dataForm) => ({ ...dataForm, birth_date: date }));
-  }
+  const handleDateChange = (date: Date) => {
+    setDataForm((previousState) => ({
+      ...previousState,
+      birth_date: date,
+    }));
+  };
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -72,7 +81,7 @@ function CreatePatientComponent(props: any) {
         Crear paciente
       </Typography>
       <Paper className={classes.paper}>
-        <form onSubmit={props.handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             {/* PRIMERA FILA */}
             <Grid item sm={5}>
@@ -212,7 +221,7 @@ function CreatePatientComponent(props: any) {
               <Button
                 color="primary"
                 variant="contained"
-                onClick={props.handleSubmit}
+                onClick={handleSubmit}
               >
                 Crear paciente
               </Button>
@@ -222,6 +231,6 @@ function CreatePatientComponent(props: any) {
       </Paper>
     </MuiPickersUtilsProvider>
   );
-}
+};
 
 export default CreatePatientComponent;

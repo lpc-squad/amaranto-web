@@ -1,20 +1,29 @@
 import { Snackbar } from "@material-ui/core";
-import { Alert, AlertTitle } from "@material-ui/lab";
+import { Alert, AlertTitle, Color } from "@material-ui/lab";
+import { FunctionComponent } from "react";
 
-function SnackbarComponent(props) {
-  return (
-    <Snackbar
-      autoHideDuration={6000}
-      open={props.open || false}
-      anchorOrigin={{ vertical: "top", horizontal: "center" }}
-      {...props}
-    >
-      <Alert color={props.severity}>
-        {props.title && <AlertTitle>{props.title}</AlertTitle>}
-        {props.children}
-      </Alert>
-    </Snackbar>
-  );
+interface SnackbarComponentProps {
+  open?: boolean;
+  title?: string;
+  severity?: Color;
 }
+
+const SnackbarComponent: FunctionComponent<SnackbarComponentProps> = ({
+  open,
+  title,
+  severity,
+  children,
+}) => (
+  <Snackbar
+    autoHideDuration={6000}
+    open={open}
+    anchorOrigin={{ vertical: "top", horizontal: "center" }}
+  >
+    <Alert color={severity}>
+      {title && <AlertTitle>{title}</AlertTitle>}
+      {children}
+    </Alert>
+  </Snackbar>
+);
 
 export default SnackbarComponent;

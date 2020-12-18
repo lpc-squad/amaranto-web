@@ -26,7 +26,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import clsx from "clsx";
 import Link from "next/link";
 import Router, { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { FunctionComponent, useEffect, useState } from "react";
 
 const drawerWidth = 240;
 
@@ -122,7 +122,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Layout(props) {
+const Layout: FunctionComponent = ({ children }) => {
   const theme = useTheme();
   const router = useRouter();
   const classes = useStyles();
@@ -135,6 +135,15 @@ function Layout(props) {
   }
 
   useEffect(() => {
+    function checkNonDashboardPages() {
+      const avoidRoutes = ["/", "/redirect/first-time-register"];
+      if (avoidRoutes.find((value) => router.pathname === value)) {
+        setIsRoot(true);
+      } else {
+        setIsRoot(false);
+      }
+    }
+
     Router.events.on("routeChangeStart", checkNonDashboardPages);
     Router.events.on("routeChangeStart", () => setLoading(true));
     Router.events.on("routeChangeComplete", () => setLoading(false));
@@ -147,120 +156,110 @@ function Layout(props) {
     };
   }, [router, isRoot]);
 
-  function checkNonDashboardPages() {
-    const avoidRoutes = ["/", "/redirect/first-time-register"];
-    if (avoidRoutes.find((value) => router.pathname === value)) {
-      setIsRoot(true);
-    } else {
-      setIsRoot(false);
-    }
-  }
-
   if (isRoot) {
-    return props.children;
-  } else {
-    return (
-      <div style={{ display: "flex" }}>
-        <Fade
-          in={loading}
-          style={{
-            zIndex: 9999,
-            transitionDelay: loading ? "800ms" : "0ms",
-          }}
-        >
-          <LinearProgress
-            style={{ zIndex: 9999, position: "absolute", top: 0 }}
-          />
-        </Fade>
-        <AppBar
-          position="fixed"
-          className={clsx(classes.appBar, {
-            [classes.appBarShift]: open,
-          })}
-        >
-          <Toolbar>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              edge="start"
-              onClick={toggleDrawer}
-              className={clsx(classes.menuButton, {
-                [classes.hide]: open,
-              })}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Link href="/">
-              <Typography
-                variant="h6"
-                noWrap
-                component="a"
-                style={{ cursor: "pointer" }}
-              >
-                Clinica Digital
-              </Typography>
-            </Link>
-          </Toolbar>
-        </AppBar>
-        <Drawer
-          anchor="left"
-          variant="permanent"
-          className={clsx(classes.drawer, {
-            [classes.drawerOpen]: open,
-            [classes.drawerClose]: !open,
-          })}
-          classes={{
-            paper: clsx({
-              [classes.drawerOpen]: open,
-              [classes.drawerClose]: !open,
-            }),
-          }}
-        >
-          <div className={classes.toolbar}>
-            <IconButton onClick={toggleDrawer}>
-              {theme.direction === "rtl" ? (
-                <ChevronRightIcon />
-              ) : (
-                <ChevronLeftIcon />
-              )}
-            </IconButton>
-          </div>
-          <Divider />
-          <List>
-            <Link href="/">
-              <ListItem button component="a">
-                <ListItemIcon>
-                  <HomeIcon />
-                </ListItemIcon>
-                <ListItemText>Inicio</ListItemText>
-              </ListItem>
-            </Link>
-            <Link href="/dashboard">
-              <ListItem button component="a">
-                <ListItemIcon>
-                  <PatientsIcon />
-                </ListItemIcon>
-                <ListItemText>Pacientes</ListItemText>
-              </ListItem>
-            </Link>
-          </List>
-          <Avatar
-            className={clsx({
-              [classes.avatarOpen]: open,
-              [classes.avatarClose]: !open,
+    return children;
+  }
+  return (
+    <div style={{ display: "flex" }}>
+      <Fade
+        in={loading}
+        style={{
+          zIndex: 9999,
+          transitionDelay: loading ? "800ms" : "0ms",
+        }}
+      >
+        <LinearProgress
+          style={{ zIndex: 9999, position: "absolute", top: 0 }}
+        />
+      </Fade>
+      <AppBar
+        position="fixed"
+        className={clsx(classes.appBar, {
+          [classes.appBarShift]: open,
+        })}
+      >
+        <Toolbar>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={toggleDrawer}
+            className={clsx(classes.menuButton, {
+              [classes.hide]: open,
             })}
           >
-            JC
-          </Avatar>
-        </Drawer>
-        <main className={classes.content}>
-          <div className={classes.toolbar} />
-          {/* TODO: Fix this for mobile */}
-          <Container>{props.children}</Container>
-        </main>
-      </div>
-    );
-  }
-}
+            <MenuIcon />
+          </IconButton>
+          <Link href="/">
+            <Typography
+              variant="h6"
+              noWrap
+              component="a"
+              style={{ cursor: "pointer" }}
+            >
+              Clinica Digital
+            </Typography>
+          </Link>
+        </Toolbar>
+      </AppBar>
+      <Drawer
+        anchor="left"
+        variant="permanent"
+        className={clsx(classes.drawer, {
+          [classes.drawerOpen]: open,
+          [classes.drawerClose]: !open,
+        })}
+        classes={{
+          paper: clsx({
+            [classes.drawerOpen]: open,
+            [classes.drawerClose]: !open,
+          }),
+        }}
+      >
+        <div className={classes.toolbar}>
+          <IconButton onClick={toggleDrawer}>
+            {theme.direction === "rtl" ? (
+              <ChevronRightIcon />
+            ) : (
+              <ChevronLeftIcon />
+            )}
+          </IconButton>
+        </div>
+        <Divider />
+        <List>
+          <Link href="/">
+            <ListItem button component="a">
+              <ListItemIcon>
+                <HomeIcon />
+              </ListItemIcon>
+              <ListItemText>Inicio</ListItemText>
+            </ListItem>
+          </Link>
+          <Link href="/dashboard">
+            <ListItem button component="a">
+              <ListItemIcon>
+                <PatientsIcon />
+              </ListItemIcon>
+              <ListItemText>Pacientes</ListItemText>
+            </ListItem>
+          </Link>
+        </List>
+        <Avatar
+          className={clsx({
+            [classes.avatarOpen]: open,
+            [classes.avatarClose]: !open,
+          })}
+        >
+          JC
+        </Avatar>
+      </Drawer>
+      <main className={classes.content}>
+        <div className={classes.toolbar} />
+        {/* TODO: Fix this for mobile */}
+        <Container>{children}</Container>
+      </main>
+    </div>
+  );
+};
 
 export default Layout;

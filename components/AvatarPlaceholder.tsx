@@ -4,27 +4,24 @@ import { FunctionComponent } from "react";
 type Gender = "F" | "M";
 
 interface AvatarPlaceholderProps {
-  dimension?: number;
+  dimension?: string | number;
   gender?: Gender;
 }
 
 const AvatarPlaceholder: FunctionComponent<AvatarPlaceholderProps> = ({
   dimension = 180,
   gender,
-}) => {
-  return (
-    <Avatar
-      style={{
-        width: dimension,
-        height: dimension,
-      }}
-      src={
-        (gender === "F" &&
-          "https://randomuser.me/api/portraits/women/39.jpg") ||
-        "https://randomuser.me/api/portraits/men/28.jpg"
-      }
-    />
-  );
-};
+}) => (
+  <Avatar
+    style={{
+      width: dimension,
+      height: dimension,
+    }}
+    src={
+      (gender === "F" && "https://randomuser.me/api/portraits/women/39.jpg") ||
+      "https://randomuser.me/api/portraits/men/28.jpg"
+    }
+  />
+);
 
 export default AvatarPlaceholder;

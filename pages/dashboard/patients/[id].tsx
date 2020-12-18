@@ -7,12 +7,12 @@ import {
   Typography,
 } from "@material-ui/core";
 import { format } from "date-fns";
-import { useEffect, useState } from "react";
+import { FunctionComponent, useEffect, useState } from "react";
 import AvatarPlaceholder from "../../../components/AvatarPlaceholder";
 import Table from "../../../components/Table";
 import db from "../../../lib/api";
 
-function Patient({ patient }) {
+const Patient: FunctionComponent = ({ patient }) => {
   const [records, setRecords] = useState([]);
 
   useEffect(() => {
@@ -72,12 +72,12 @@ function Patient({ patient }) {
         </Grid>
       </Grid>
     );
-  } else {
-    return <p>No encontramos a ese paciente</p>;
   }
-}
 
-const RecordRow = ({ record }) => {
+  return <p>No encontramos a ese paciente</p>;
+};
+
+const RecordRow: FunctionComponent = ({ record }) => {
   let date;
   try {
     date = format(new Date(), "yyyy-mm-dd");
