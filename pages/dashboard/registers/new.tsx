@@ -1,35 +1,33 @@
 import {
   Button,
   Card,
-  CardContent, Dialog,
+  CardContent,
+  Dialog,
   DialogContent,
   DialogContentText,
-  DialogTitle, Grid,
-
-
-  Paper, Table,
-
+  DialogTitle,
+  Grid,
+  Paper,
+  Table,
   TableBody,
-  TableCell, TableHead,
-
-
-  TableRow, TextField,
-  Typography
+  TableCell,
+  TableHead,
+  TableRow,
+  TextField,
+  Typography,
 } from "@material-ui/core";
+import { Color } from "@material-ui/lab";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { FormEvent, FunctionComponent, useRef, useState } from "react";
 import shortId from "shortid";
 import AvatarPlaceholder from "../../../components/AvatarPlaceholder";
 import Snackbar from "../../../components/Snackbar";
 import db from "../../../lib/api";
 import { ISnackbar } from "../../../lib/types";
 
-
-
-
-
 function CreateRegister() {
-  let timeout = null; // Debounce
+  // @ts-ignore
+  let timeout; // Debounce
   const inputContainer = useRef(""); // Debounce
 
   const [modal, setModal] = useState(false);
@@ -44,38 +42,29 @@ function CreateRegister() {
     severity: "success",
   });
 
-  /**
-   * Debounce search
-   */
-  function handleChange() {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => {
-      // TODO: No será demasiado?
-      // @ts-ignore
-      const { value } = inputContainer.current.children[1].children[0];
-      searchPatient(value);
-    }, 400);
-  }
-
-  function handleSelect(patient) {
-    setPatient(patient);
-    toggleModal();
-  }
-
   function toggleModal() {
     setModal((m) => !m);
   }
 
-  function searchPatient(text) {
+  const toggleSnackbar = (message = "", severity: Color = "info") => {
+    setSnackbar((prevState) => ({
+      ...prevState,
+      open: !prevState.open,
+      severity: severity || prevState.severity,
+      message,
+    }));
+  };
+
+  const searchPatient = (text: string) => {
     if (!text) {
       setSearchResult([]);
       return;
     }
-    let txt = text.toLowerCase();
+    const txt: string = text.toLowerCase();
     const result = db
       .get("patients")
       .filter(
-        (o) =>
+        (o: any) =>
           o.name.toLowerCase().includes(txt) ||
           o.surname.toLowerCase().includes(txt) ||
           o.documentId.toString().includes(txt)
@@ -83,9 +72,28 @@ function CreateRegister() {
       .value();
 
     setSearchResult(result);
-  }
+  };
 
-  function handleSubmit(e) {
+  /**
+   * Debounce search
+   */
+  const handleChange = () => {
+    // @ts-ignore
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      // TODO: No será demasiado?
+      // @ts-ignore
+      const { value } = inputContainer.current.children[1].children[0];
+      searchPatient(value);
+    }, 400);
+  };
+
+  const handleSelect = (selectedPatient: any) => {
+    setPatient(selectedPatient);
+    toggleModal();
+  };
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const collection = db.get("records");
@@ -107,8 +115,9 @@ function CreateRegister() {
       collection
         .push({
           _id: shortId.generate(),
-          _doctorId: 1, // FIXME hardCoded
-          _patientId: patient._id,
+          _doctorId: 1, // FIXME: hardCoded
+          // @ts-ignore
+          _patientId: patient?._id,
           indications,
           observations,
           date: new Date(),
@@ -119,16 +128,7 @@ function CreateRegister() {
     } catch (error) {
       toggleSnackbar("No se pudo guardar el registro", "error");
     }
-  }
-
-  function toggleSnackbar(message: string = "", severity: any = "info") {
-    setSnackbar((prevState) => ({
-      ...prevState,
-      open: !prevState.open,
-      severity: severity || prevState.severity,
-      message,
-    }));
-  }
+  };
 
   return (
     <Paper style={{ padding: 48 }}>
@@ -210,7 +210,10 @@ function CreateRegister() {
   );
 }
 
-function Patient({ data, toggleModal }) {
+const Patient: FunctionComponent<{ data: any; toggleModal: () => void }> = ({
+  data,
+  toggleModal,
+}) => {
   if (data) {
     return (
       <Card>
@@ -218,7 +221,7 @@ function Patient({ data, toggleModal }) {
           <Grid container alignItems="center" justify="center" spacing={4}>
             <Grid item>
               {/* TODO: Put custom width */}
-              <AvatarPlaceholder customWidth="" gender={data.gender} />
+              <AvatarPlaceholder dimension="" gender={data.gender} />
             </Grid>
             <Grid item>
               <Typography>Nombre: {data.name}</Typography>
@@ -236,70 +239,76 @@ function Patient({ data, toggleModal }) {
         </CardContent>
       </Card>
     );
-  } else {
-    return (
-      <Card>
-        <CardContent style={{ textAlign: "center" }}>
-          <Button onClick={toggleModal}>Buscar paciente</Button>
-        </CardContent>
-      </Card>
-    );
   }
+  return (
+    <Card>
+      <CardContent style={{ textAlign: "center" }}>
+        <Button onClick={toggleModal}>Buscar paciente</Button>
+      </CardContent>
+    </Card>
+  );
+};
+
+interface SearchPatientProps {
+  open: boolean;
+  input: any;
+  onClose?: () => void;
+  handleChange?: () => void;
+  selectPatient?: (i: any) => void;
+  searchResult?: any[];
 }
 
-function SearchPatient({
+const SearchPatient: FunctionComponent<SearchPatientProps> = ({
   open,
   input,
   onClose,
   handleChange,
   selectPatient,
   searchResult = [],
-}) {
-  return (
-    <Dialog onClose={onClose} open={open}>
-      <DialogTitle>Buscar paciente</DialogTitle>
-      <DialogContent style={{ minWidth: 600 }}>
-        <TextField
-          autoFocus
-          fullWidth
-          ref={input}
-          label="Palabras clave"
-          onChange={handleChange}
-          placeholder="Nombre, apellido, DNI"
-        />
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Nombre</TableCell>
-              <TableCell>Apellido</TableCell>
-              <TableCell>Documento de identidad</TableCell>
-              <TableCell>Acciones</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {searchResult.length > 0 &&
-              searchResult.map((i, k) => (
-                <TableRow key={k}>
-                  <TableCell>{i.name}</TableCell>
-                  <TableCell>{i.surname}</TableCell>
-                  <TableCell>{i.documentId}</TableCell>
-                  <TableCell>
-                    <Button onClick={() => selectPatient(i)}>
-                      Seleccionar
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
-        <DialogContentText align="center">
-          {searchResult.length === 0 &&
-            ((input.current !== "" && "No hay resultados") ||
-              "Escribí algún filtro")}
-        </DialogContentText>
-      </DialogContent>
-    </Dialog>
-  );
-}
+}) => (
+  <Dialog onClose={onClose} open={open}>
+    <DialogTitle>Buscar paciente</DialogTitle>
+    <DialogContent style={{ minWidth: 600 }}>
+      <TextField
+        autoFocus
+        fullWidth
+        ref={input}
+        label="Palabras clave"
+        onChange={handleChange}
+        placeholder="Nombre, apellido, DNI"
+      />
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Nombre</TableCell>
+            <TableCell>Apellido</TableCell>
+            <TableCell>Documento de identidad</TableCell>
+            <TableCell>Acciones</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {searchResult.length > 0 &&
+            searchResult.map((i) => (
+              <TableRow key={i._id}>
+                <TableCell>{i.name}</TableCell>
+                <TableCell>{i.surname}</TableCell>
+                <TableCell>{i.documentId}</TableCell>
+                <TableCell>
+                  <Button onClick={() => selectPatient && selectPatient(i)}>
+                    Seleccionar
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+        </TableBody>
+      </Table>
+      <DialogContentText align="center">
+        {searchResult.length === 0 &&
+          ((input.current !== "" && "No hay resultados") ||
+            "Escribí algún filtro")}
+      </DialogContentText>
+    </DialogContent>
+  </Dialog>
+);
 
 export default CreateRegister;

@@ -15,8 +15,9 @@ import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
+import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
 import "date-fns";
-import { useState } from "react";
+import { ChangeEvent, FunctionComponent, useState } from "react";
 import useSWR from "swr";
 import db from "../../lib/api";
 
@@ -41,30 +42,42 @@ const useStyles = makeStyles((theme) => ({
  * TODO: Reemplazar esto con GraphQL
  * @param key El nombre de la colección
  */
-async function fetchData(key) {
+async function fetchData(key: any) {
   const data = db.get(key).value();
   return data;
 }
 
-function CreatePatientComponent(props: any) {
+interface CreatePatientComponentProps {
+  handleSubmit?: () => void;
+}
+
+const CreatePatientComponent: FunctionComponent<CreatePatientComponentProps> = ({
+  handleSubmit,
+}) => {
   const classes = useStyles();
   const { data: coverageTemplate } = useSWR("coverageTemplate", fetchData);
-  const [dataForm, setDataForm] = useState({
+  const [dataForm, setDataForm] = useState<{
+    birth_date: Date | MaterialUiPickersDate;
+    gender: string;
+  }>({
     birth_date: new Date(),
     gender: "",
   });
 
-  function handleChange(e: React.ChangeEvent<{ value: any; name: string }>) {
+  const handleChange = (e: ChangeEvent<{ value: any; name: string }>) => {
     const { name, value } = e.target;
-    setDataForm((dataForm) => ({
-      ...dataForm,
+    setDataForm((previousState) => ({
+      ...previousState,
       [name]: value,
     }));
-  }
+  };
 
-  function handleDateChange(date: Date | null) {
-    setDataForm((dataForm) => ({ ...dataForm, birth_date: date }));
-  }
+  const handleDateChange = (date: MaterialUiPickersDate) => {
+    setDataForm((previousState) => ({
+      ...previousState,
+      birth_date: date,
+    }));
+  };
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -72,7 +85,7 @@ function CreatePatientComponent(props: any) {
         Crear paciente
       </Typography>
       <Paper className={classes.paper}>
-        <form onSubmit={props.handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             {/* PRIMERA FILA */}
             <Grid item sm={5}>
@@ -157,8 +170,9 @@ function CreatePatientComponent(props: any) {
                 <InputLabel id="coverage_name">Cobertura</InputLabel>
                 <Select id="coverage_name" name="coverage_name" defaultValue="">
                   {(coverageTemplate || []).length > 0 &&
-                    coverageTemplate.map(({ coverage_name }, k) => (
-                      <MenuItem key={k} value={coverage_name}>
+                    // @ts-ignore
+                    coverageTemplate.map(({ coverage_name }) => (
+                      <MenuItem key={coverage_name} value={coverage_name}>
                         {coverage_name}
                       </MenuItem>
                     ))}
@@ -170,8 +184,9 @@ function CreatePatientComponent(props: any) {
                 <InputLabel id="coverage_plan">Plan </InputLabel>
                 <Select id="coverage_plan" name="coverage_plan" defaultValue="">
                   {(coverageTemplate || []).length > 0 &&
-                    coverageTemplate.map(({ plan }, k) => (
-                      <MenuItem key={k} value={plan}>
+                    // @ts-ignore
+                    coverageTemplate.map(({ plan }) => (
+                      <MenuItem key={plan} value={plan}>
                         {plan}
                       </MenuItem>
                     ))}
@@ -212,7 +227,7 @@ function CreatePatientComponent(props: any) {
               <Button
                 color="primary"
                 variant="contained"
-                onClick={props.handleSubmit}
+                onClick={handleSubmit}
               >
                 Crear paciente
               </Button>
@@ -222,6 +237,6 @@ function CreatePatientComponent(props: any) {
       </Paper>
     </MuiPickersUtilsProvider>
   );
-}
+};
 
 export default CreatePatientComponent;

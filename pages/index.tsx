@@ -10,12 +10,11 @@ import {
   Typography,
 } from "@material-ui/core";
 import { useTheme } from "@material-ui/core/styles";
-import ArrowDownIcon from "@material-ui/icons/ExpandMore";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
-
+import ArrowDownIcon from "@material-ui/icons/ExpandMore";
 import Link from "next/link";
 
-function Index(props) {
+function Index() {
   // TODO: Para hacer el efecto Slack https://slack.com/intl/en-ar/
   // Fuente: https://material-ui.com/components/app-bar/#scrolling
   // const trigger = useScrollTrigger({ target: window ? window() : undefined });
@@ -188,28 +187,30 @@ function Index(props) {
           </section>
         </Container>
       </main>
-      <style jsx global>{`
-        @keyframes arrow {
-          0% {
-            transform: translateY(0);
+      <style jsx global>
+        {`
+          @keyframes arrow {
+            0% {
+              transform: translateY(0);
+            }
+            50% {
+              transform: translateY(50%);
+            }
+            100% {
+              transform: translateY(0);
+            }
           }
-          50% {
-            transform: translateY(50%);
-          }
-          100% {
-            transform: translateY(0);
-          }
-        }
-      `}</style>
+        `}
+      </style>
     </>
   );
 }
 
-function Plan(props) {
+function Plan({ children }: { children: any }) {
   return (
     <Grid item style={{ border: "0 solid black" }}>
       <Card>
-        <CardContent>{props.children}</CardContent>
+        <CardContent>{children}</CardContent>
       </Card>
     </Grid>
   );

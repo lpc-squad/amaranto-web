@@ -8,7 +8,7 @@ import { Auth0Provider } from "use-auth0-hooks";
 import Layout from "../components/Layout";
 import theme from "../lib/theme";
 
-function onRedirectCallback(appState) {
+function onRedirectCallback(appState: { returnTo: any }) {
   if (appState && appState.returnTo) {
     Router.push("/dashboard");
   }
@@ -19,7 +19,7 @@ export default class MyApp extends App {
     // Remove the server-side injected CSS.
     const jssStyles = document.querySelector("#jss-server-side");
     if (jssStyles) {
-      jssStyles.parentElement.removeChild(jssStyles);
+      jssStyles.parentElement?.removeChild(jssStyles);
     }
   }
 
@@ -27,7 +27,7 @@ export default class MyApp extends App {
     const { Component, pageProps } = this.props;
 
     return (
-      <React.Fragment>
+      <>
         <Head>
           <title>Clinical Record</title>
           <meta
@@ -40,21 +40,22 @@ export default class MyApp extends App {
           <CssBaseline />
           <Layout>
             <Auth0Provider
-              domain={"clinical-record.auth0.com"}
+              domain="clinical-record.auth0.com"
               // TODO: Cuidado con esto, como hacemos?
               redirectUri={
                 (process.env.NODE_ENV !== "production" &&
                   "http://localhost:3000/dashboard") ||
-                process.env.REACT_APP_AUTH0_REDIRECT_URI
+                process.env.REACT_APP_AUTH0_REDIRECT_URI ||
+                ""
               }
               onRedirectCallback={onRedirectCallback}
-              clientId={"fMa0FV92OSzAd9dq8bH3PgH3SHnZJJ3W"}
+              clientId="fMa0FV92OSzAd9dq8bH3PgH3SHnZJJ3W"
             >
               <Component {...pageProps} />
             </Auth0Provider>
           </Layout>
         </ThemeProvider>
-      </React.Fragment>
+      </>
     );
   }
 }

@@ -7,18 +7,22 @@ import {
   Typography,
 } from "@material-ui/core";
 import { format } from "date-fns";
-import { useEffect, useState } from "react";
+import { FunctionComponent, useEffect, useState } from "react";
 import AvatarPlaceholder from "../../../components/AvatarPlaceholder";
 import Table from "../../../components/Table";
 import db from "../../../lib/api";
 
-function Patient({ patient }) {
+interface PatientProps {
+  patient: any;
+}
+
+const Patient: FunctionComponent<PatientProps> = ({ patient }) => {
   const [records, setRecords] = useState([]);
 
   useEffect(() => {
     let _records = db
       .get("records")
-      .filter((r) => r.patient_id === patient._id)
+      .filter((r: any) => r.patient_id === patient._id)
       .value();
 
     if (!Array.isArray(_records) && !!_records) {
@@ -60,7 +64,7 @@ function Patient({ patient }) {
             head={["Fecha", "Observaciones", "Prescripción"]}
             content={
               (records.length > 0 &&
-                records.map((i, k) => <RecordRow key={k} record={i} />)) || (
+                records.map((i) => <RecordRow key={i} record={i} />)) || (
                 <TableRow>
                   <TableCell>N/A</TableCell>
                   <TableCell>N/A</TableCell>
@@ -72,12 +76,16 @@ function Patient({ patient }) {
         </Grid>
       </Grid>
     );
-  } else {
-    return <p>No encontramos a ese paciente</p>;
   }
+
+  return <p>No encontramos a ese paciente</p>;
+};
+
+interface RecordRowProps {
+  record: any;
 }
 
-const RecordRow = ({ record }) => {
+const RecordRow: FunctionComponent<RecordRowProps> = ({ record }) => {
   let date;
   try {
     date = format(new Date(), "yyyy-mm-dd");
@@ -93,12 +101,13 @@ const RecordRow = ({ record }) => {
   );
 };
 
+// @ts-ignore
 Patient.getInitialProps = async (ctx) => {
   const { differenceInYears } = await import("date-fns");
   const { id } = ctx.query;
 
-  let patient = db.get("patients").find({ _id: id }).value();
-  let user = db.get("users").find({ _id: patient.user_id }).value();
+  const patient = db.get("patients").find({ _id: id }).value();
+  const user = db.get("users").find({ _id: patient.user_id }).value();
   const ourPatient = { ...user, ...patient };
 
   // Server Side calculation, Is this OK?
