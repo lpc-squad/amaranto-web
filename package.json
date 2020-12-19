@@ -1,9 +1,11 @@
 {
-  "name": "clinical-client",
+  "name": "amaranto-web",
   "version": "0.1.0",
   "description": "",
   "scripts": {
+    "build": "next build",
     "dev": "next",
+    "start": "next start",
     "test": "echo \"Error: no test specified\" && exit 1",
     "export": "npm run build && next export",
     "format": "prettier --write **/*.ts **/*.tsx",
@@ -43,7 +45,7 @@
     "@next/bundle-analyzer": "^10.0.3",
     "@types/node": "^14.14.14",
     "@types/react": "^17.0.0",
-    "babel-eslint": "^10.1.0",
+    "@typescript-eslint/parser": "^4.10.0",
     "cross-env": "^7.0.3",
     "eslint": "^7.16.0",
     "eslint-config-airbnb": "^18.2.1",

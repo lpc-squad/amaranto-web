@@ -12,15 +12,28 @@ import {
 import { useTheme } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import ArrowDownIcon from "@material-ui/icons/ExpandMore";
+import { NextPage } from "next";
 import Link from "next/link";
+import { FunctionComponent } from "react";
 
-function Index() {
+const Plan: FunctionComponent = ({ children }) => {
+  return (
+    <Grid item style={{ border: "0 solid black" }}>
+      <Card>
+        <CardContent>{children}</CardContent>
+      </Card>
+    </Grid>
+  );
+};
+
+const IndexPage: NextPage = () => {
   // TODO: Para hacer el efecto Slack https://slack.com/intl/en-ar/
   // Fuente: https://material-ui.com/components/app-bar/#scrolling
   // const trigger = useScrollTrigger({ target: window ? window() : undefined });
   const theme = useTheme();
   const upSm = useMediaQuery(theme.breakpoints.up("sm"));
   const upMd = useMediaQuery(theme.breakpoints.up("md"));
+
   return (
     <>
       <header
@@ -204,16 +217,6 @@ function Index() {
       </style>
     </>
   );
-}
+};
 
-function Plan({ children }: { children: any }) {
-  return (
-    <Grid item style={{ border: "0 solid black" }}>
-      <Card>
-        <CardContent>{children}</CardContent>
-      </Card>
-    </Grid>
-  );
-}
-
-export default Index;
+export default IndexPage;
