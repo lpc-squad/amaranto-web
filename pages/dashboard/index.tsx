@@ -13,6 +13,7 @@ import querystring from "querystring";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { useAuth } from "use-auth0-hooks";
+import Layout from "../../components/Layout";
 import Table from "../../components/Table";
 
 function Index() {
@@ -74,7 +75,7 @@ function Index() {
   }, [isLoading, isAuthenticated, user, login]);
 
   return (
-    <>
+    <Layout>
       <Grid container direction="column" spacing={6}>
         <Alert severity="info">
           <AlertTitle>
@@ -177,7 +178,7 @@ function Index() {
           />
         </Grid>
       </Grid>
-    </>
+    </Layout>
   );
 }
 

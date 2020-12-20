@@ -5,7 +5,6 @@ import Router from "next/router";
 import React from "react";
 import { Auth0Provider } from "use-auth0-hooks";
 import Head from "../components/Head";
-import Layout from "../components/Layout";
 import theme from "../lib/theme";
 
 function onRedirectCallback(appState: { returnTo: any }) {
@@ -32,16 +31,14 @@ export default class MyApp extends App {
         <ThemeProvider theme={theme}>
           {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
           <CssBaseline />
-          <Layout>
-            <Auth0Provider
-              onRedirectCallback={onRedirectCallback}
-              domain={process.env.NEXT_PUBLIC_AUTH0_DOMAIN || ""}
-              clientId={process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID || ""}
-              redirectUri={process.env.NEXT_PUBLIC_AUTH0_REDIRECT_URI || ""}
-            >
-              <Component {...pageProps} />
-            </Auth0Provider>
-          </Layout>
+          <Auth0Provider
+            onRedirectCallback={onRedirectCallback}
+            domain={process.env.NEXT_PUBLIC_AUTH0_DOMAIN || ""}
+            clientId={process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID || ""}
+            redirectUri={process.env.NEXT_PUBLIC_AUTH0_REDIRECT_URI || ""}
+          >
+            <Component {...pageProps} />
+          </Auth0Provider>
         </ThemeProvider>
       </>
     );
